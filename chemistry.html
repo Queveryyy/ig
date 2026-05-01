@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE Chemistry Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #6ee7b7;
+    --accent2: #818cf8;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --june1cr: #34d399;
+    --june1c: #818cf8;
+    --nov1c: #fb923c;
+    --u1-nov25: #e879f9;
+    --u1-jun25: #38bdf8;
+    --u1-jun25r: #22d3ee;
+    --u1-jun24: #a78bfa;
+    --u1-jun24r: #c084fc;
+    --u1-jun23: #fb7185;
+    --u1-jun23r: #f43f5e;
+    --u1-jun22: #facc15;
+    --u1-jun22r: #eab308;
+    --u1-jun21: #94a3b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+  .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  header { text-align: center; padding: 3rem 0 2rem; }
+  header::after { content: ''; display: block; width: 80px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); margin: 1.5rem auto 0; }
+  .tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem; border-radius: 2px; margin-bottom: 1rem; }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+  h1 span { background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+  .save-indicator { display: inline-flex; align-items: center; gap: 0.4rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-top: 0.8rem; opacity: 0; transition: opacity 0.4s; }
+  .save-indicator.show { opacity: 1; }
+  .save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+/* Export/Import Panel */
+.save-panel {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 1.2rem 1.4rem;
+margin-bottom: 1.5rem;
+}
+.save-panel-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 0.85rem;
+font-weight: 700;
+color: var(–text);
+margin-bottom: 0.3rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+.save-panel-desc {
+font-size: 0.78rem;
+color: var(–muted);
+margin-bottom: 1rem;
+line-height: 1.5;
+}
+.save-panel-row {
+display: flex;
+gap: 0.6rem;
+flex-wrap: wrap;
+}
+.save-code-box {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 0.6rem 0.8rem;
+color: var(–accent);
+width: 100%;
+resize: vertical;
+min-height: 60px;
+margin-top: 0.8rem;
+outline: none;
+transition: border-color 0.2s;
+}
+.save-code-box:focus { border-color: var(–accent2); }
+.save-code-box::placeholder { color: var(–muted); }
+.btn-save { background: rgba(110,231,183,0.12); color: var(–accent); border: 1px solid rgba(110,231,183,0.3); }
+.btn-save:hover { background: rgba(110,231,183,0.22); }
+.btn-import { background: rgba(129,140,248,0.12); color: var(–accent2); border: 1px solid rgba(129,140,248,0.3); }
+.btn-import:hover { background: rgba(129,140,248,0.22); }
+.toast {
+position: fixed;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 0.7rem 1.4rem;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.78rem;
+color: var(–text);
+z-index: 999;
+opacity: 0;
+transition: all 0.3s;
+pointer-events: none;
+white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(110,231,183,0.4); color: var(–accent); }
+.toast.error { border-color: rgba(248,113,113,0.4); color: var(–red); }
+.stats { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+.stat { background: var(–surface); border: 1px solid var(–border); border-radius: 8px; padding: 0.6rem 1.2rem; font-family: ‘DM Mono’, monospace; font-size: 0.8rem; color: var(–muted); }
+.stat strong { color: var(–accent); font-size: 1rem; }
+.filter-section { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 1rem; margin-bottom: 0.8rem; }
+.filter-section-label { font-family: ‘DM Mono’, monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); margin-bottom: 0.6rem; }
+.filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.filter-btn { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; letter-spacing: 0.05em; padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid var(–border); background: transparent; color: var(–muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
+.filter-btn:hover { border-color: var(–accent2); color: var(–accent2); }
+.filter-btn.active { background: var(–accent); border-color: var(–accent); color: #000; font-weight: 600; }
+.filter-btn.active-june1cr { background: var(–june1cr); border-color: var(–june1cr); color: #000; font-weight: 600; }
+.filter-btn.active-june1c  { background: var(–june1c);  border-color: var(–june1c);  color: #fff; font-weight: 600; }
+.filter-btn.active-nov1c   { background: var(–nov1c);   border-color: var(–nov1c);   color: #000; font-weight: 600; }
+.progress-wrap { margin-bottom: 2rem; }
+.progress-label { display: flex; justify-content: space-between; font-family: ‘DM Mono’, monospace; font-size: 0.75rem; color: var(–muted); margin-bottom: 0.5rem; }
+.progress-bar { height: 4px; background: var(–border); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(–accent), var(–accent2)); border-radius: 2px; transition: width 0.5s ease; width: 0%; }
+.card-area { position: relative; perspective: 1200px; margin-bottom: 1.5rem; min-height: 380px; }
+.flashcard { width: 100%; min-height: 380px; position: relative; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1); cursor: pointer; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; padding: 2rem 2.5rem; display: flex; flex-direction: column; border: 1px solid var(–border); min-height: 380px; }
+.card-front { background: var(–card); background-image: radial-gradient(ellipse at top left, rgba(110,231,183,0.05) 0%, transparent 60%); }
+.card-back { background: var(–surface); background-image: radial-gradient(ellipse at bottom right, rgba(129,140,248,0.08) 0%, transparent 60%); transform: rotateY(180deg); }
+.card-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.card-spec { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(–accent); display: flex; align-items: center; gap: 0.4rem; }
+.card-spec::before { content: ‘’; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(–accent); flex-shrink: 0; }
+.card-paper-badge { font-family: ‘DM Mono’, monospace; font-size: 0.63rem; letter-spacing: 0.06em; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid; }
+.badge-june1cr { color: var(–june1cr); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.08); }
+.badge-june1c  { color: var(–june1c);  border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.08); }
+.badge-nov1c   { color: var(–nov1c);   border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.08); }
+.badge-multi   { color: var(–muted);   border-color: var(–border); }
+.badge-unit1   { color: #94a3b8; border-color: rgba(148,163,184,0.25); background: rgba(148,163,184,0.06); }
+.badge-u1-nov25  { color: var(–u1-nov25);  border-color: rgba(232,121,249,0.3); background: rgba(232,121,249,0.07); }
+.badge-u1-jun25  { color: var(–u1-jun25);  border-color: rgba(56,189,248,0.3);  background: rgba(56,189,248,0.07); }
+.badge-u1-jun25r { color: var(–u1-jun25r); border-color: rgba(34,211,238,0.3);  background: rgba(34,211,238,0.07); }
+.badge-u1-jun24  { color: var(–u1-jun24);  border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.07); }
+.badge-u1-jun24r { color: var(–u1-jun24r); border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.07); }
+.badge-u1-jun23  { color: var(–u1-jun23);  border-color: rgba(251,113,133,0.3); background: rgba(251,113,133,0.07); }
+.badge-u1-jun23r { color: var(–u1-jun23r); border-color: rgba(244,63,94,0.3);   background: rgba(244,63,94,0.07); }
+.badge-u1-jun22  { color: var(–u1-jun22);  border-color: rgba(250,204,21,0.3);  background: rgba(250,204,21,0.07); }
+.badge-u1-jun22r { color: var(–u1-jun22r); border-color: rgba(234,179,8,0.3);   background: rgba(234,179,8,0.07); }
+.badge-u1-jun21  { color: var(–u1-jun21);  border-color: rgba(148,163,184,0.3); background: rgba(148,163,184,0.07); }
+.card-qnum { font-family: ‘DM Mono’, monospace; font-size: 0.63rem; color: var(–muted); margin-left: auto; }
+.card-topic { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–muted); margin-bottom: 0.8rem; }
+.card-q { font-family: ‘Syne’, sans-serif; font-size: clamp(1rem, 2.5vw, 1.25rem); font-weight: 600; line-height: 1.4; flex: 1; display: flex; align-items: center; }
+.card-hint { margin-top: 1.5rem; font-size: 0.78rem; color: var(–muted); display: flex; align-items: center; gap: 0.4rem; }
+.card-marks { display: inline-flex; align-items: center; gap: 0.3rem; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; padding: 0.25rem 0.6rem; border-radius: 4px; background: rgba(251,191,36,0.1); color: var(–yellow); border: 1px solid rgba(251,191,36,0.2); margin-top: 1rem; align-self: flex-start; }
+.answer-label { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(–accent2); margin-bottom: 1rem; }
+.answer-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; overflow-y: auto; max-height: 260px; padding-right: 0.3rem; }
+.answer-list::-webkit-scrollbar { width: 3px; }
+.answer-list::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
+.answer-list li { display: flex; gap: 0.6rem; font-size: 0.88rem; line-height: 1.5; padding: 0.5rem 0.8rem; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 2px solid var(–accent2); }
+.answer-list li::before { content: ‘✓’; color: var(–accent); font-family: ‘DM Mono’, monospace; font-size: 0.75rem; margin-top: 2px; flex-shrink: 0; }
+.card-back .card-marks { background: rgba(110,231,183,0.08); color: var(–accent); border-color: rgba(110,231,183,0.2); }
+.controls { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+.btn { font-family: ‘Syne’, sans-serif; font-weight: 600; font-size: 0.85rem; padding: 0.75rem 1.5rem; border-radius: 8px; border: 1px solid var(–border); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+.btn-primary { background: var(–accent); color: #000; border-color: var(–accent); }
+.btn-primary:hover { background: #4ade80; transform: translateY(-1px); }
+.btn-secondary { background: transparent; color: var(–text); }
+.btn-secondary:hover { border-color: var(–accent2); color: var(–accent2); }
+.btn-danger { background: transparent; color: var(–red); border-color: rgba(248,113,113,0.3); }
+.btn-danger:hover { background: rgba(248,113,113,0.1); }
+.card-counter { text-align: center; font-family: ‘DM Mono’, monospace; font-size: 0.8rem; color: var(–muted); margin-bottom: 1.5rem; }
+.result-btns { display: flex; gap: 0.8rem; justify-content: center; margin-bottom: 2rem; }
+.result-btn { font-family: ‘DM Mono’, monospace; font-size: 0.8rem; padding: 0.6rem 1.4rem; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; font-weight: 500; display: none; }
+.result-btn.show { display: flex; align-items: center; gap: 0.4rem; }
+.btn-know { background: rgba(110,231,183,0.15); color: var(–accent); border: 1px solid rgba(110,231,183,0.3); }
+.btn-know:hover { background: rgba(110,231,183,0.25); }
+.btn-review { background: rgba(251,191,36,0.12); color: var(–yellow); border: 1px solid rgba(251,191,36,0.25); }
+.btn-review:hover { background: rgba(251,191,36,0.22); }
+.done-screen { display: none; text-align: center; padding: 4rem 2rem; background: var(–surface); border: 1px solid var(–border); border-radius: 16px; }
+.done-screen.show { display: block; }
+.done-score { font-family: ‘Syne’, sans-serif; font-size: 4rem; font-weight: 800; background: linear-gradient(135deg, var(–accent), var(–accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.done-label { color: var(–muted); font-size: 0.9rem; margin-top: 0.5rem; }
+.card-list { margin-top: 3rem; }
+.section-title { font-family: ‘Syne’, sans-serif; font-size: 1rem; font-weight: 700; color: var(–muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(–border); }
+.mini-card { background: var(–surface); border: 1px solid var(–border); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.8rem; }
+.mini-card:hover { border-color: var(–accent2); transform: translateX(4px); }
+.mini-card.active-card { border-color: var(–accent); background: rgba(110,231,183,0.05); }
+.mini-spec { font-family: ‘DM Mono’, monospace; font-size: 0.63rem; color: var(–accent); white-space: nowrap; min-width: 36px; }
+.mini-badge { font-family: ‘DM Mono’, monospace; font-size: 0.58rem; white-space: nowrap; padding: 0.15rem 0.4rem; border-radius: 3px; border: 1px solid; flex-shrink: 0; }
+.mini-q { font-size: 0.82rem; color: var(–text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-status { width: 8px; height: 8px; border-radius: 50%; background: var(–border); flex-shrink: 0; }
+.mini-status.known { background: var(–accent); }
+.mini-status.review { background: var(–yellow); }
+@media (max-width: 600px) {
+.card-face { padding: 1.5rem; }
+.card-q { font-size: 1rem; }
+.controls { flex-direction: column; align-items: stretch; }
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+  <div class="toast" id="toast"></div>
+
+  <header>
+    <div class="tag">Edexcel IGCSE · Unit 2 · 4WCH2</div>
+    <h1>Chemistry<br><span>Flashcards</span></h1>
+    <p class="subtitle">All priority spec points · June & Nov 2025 Papers</p>
+    <div class="save-indicator" id="save-indicator"><span class="save-dot"></span> Progress saved locally</div>
+  </header>
+
+  <!-- Save / Load Progress Panel -->
+
+  <div class="save-panel">
+    <div class="save-panel-title">💾 Save &amp; Restore Progress</div>
+    <div class="save-panel-desc">
+      Since you're using an external compiler, click <strong>Export</strong> to get a save code — copy it and keep it safe.<br>
+      Next time, paste it back into the box and click <strong>Import</strong> to restore your Got It / Need Review marks.
+    </div>
+    <div class="save-panel-row">
+      <button class="btn btn-save" onclick="exportProgress()">⬆ Export Progress</button>
+      <button class="btn btn-import" onclick="importProgress()">⬇ Import Progress</button>
+      <button class="btn btn-danger" onclick="resetAll()">↺ Reset All</button>
+    </div>
+    <textarea class="save-code-box" id="save-code-box" placeholder="Your save code will appear here after exporting. Paste a previous save code here to import it."></textarea>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong id="total-count">0</strong> total</div>
+    <div class="stat"><strong id="known-count" style="color:var(--accent)">0</strong> known</div>
+    <div class="stat"><strong id="review-count" style="color:var(--yellow)">0</strong> review</div>
+    <div class="stat"><strong id="remain-count">0</strong> left</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Overall Progress</span><span id="progress-pct">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-section-label">Filter by Topic</div>
+    <div class="filter-row" id="topic-filters">
+      <button class="filter-btn active" onclick="setTopicFilter('all',this)">All Topics</button>
+      <button class="filter-btn" onclick="setTopicFilter('1',this)">Topic 1 · Calcs</button>
+      <button class="filter-btn" onclick="setTopicFilter('5',this)">Topic 5 · Bonding</button>
+      <button class="filter-btn" onclick="setTopicFilter('6',this)">Topic 6 · Groups</button>
+      <button class="filter-btn" onclick="setTopicFilter('7',this)">Topic 7 · Rates</button>
+      <button class="filter-btn" onclick="setTopicFilter('8',this)">Topic 8 · Organic</button>
+      <button class="filter-btn" onclick="setTopicFilter('review',this)">⚑ To Review</button>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-section-label">Filter by Paper — Modular 4WCH2 (your spec)</div>
+    <div class="filter-row" id="year-filters">
+      <button class="filter-btn active" onclick="setYearFilter('all',this)">All Papers</button>
+      <button class="filter-btn" style="color:var(--june1cr);border-color:rgba(52,211,153,0.3)" onclick="setYearFilter('june1cr',this)">1CR · Jun 25</button>
+      <button class="filter-btn" style="color:var(--june1c);border-color:rgba(129,140,248,0.3)" onclick="setYearFilter('june1c',this)">1C · Jun 25</button>
+      <button class="filter-btn" style="color:var(--nov1c);border-color:rgba(251,146,60,0.3)" onclick="setYearFilter('nov1c',this)">1C · Nov 25</button>
+      <button class="filter-btn" onclick="setYearFilter('multi',this)">Multi-paper</button>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-section-label">Filter by Paper — Unit 1 Linear 4CH1 (overlapping topics)</div>
+    <div class="filter-row">
+      <button class="filter-btn" style="color:var(--u1-nov25);border-color:rgba(232,121,249,0.3)" onclick="setYearFilter('u1-nov25',this)">2C · Nov 25</button>
+      <button class="filter-btn" style="color:var(--u1-jun25);border-color:rgba(56,189,248,0.3)" onclick="setYearFilter('u1-jun25',this)">2C · Jun 25</button>
+      <button class="filter-btn" style="color:var(--u1-jun25r);border-color:rgba(34,211,238,0.3)" onclick="setYearFilter('u1-jun25r',this)">2CR · Jun 25</button>
+      <button class="filter-btn" style="color:var(--u1-jun24);border-color:rgba(167,139,250,0.3)" onclick="setYearFilter('u1-jun24',this)">2C · Jun 24</button>
+      <button class="filter-btn" style="color:var(--u1-jun24r);border-color:rgba(192,132,252,0.3)" onclick="setYearFilter('u1-jun24r',this)">2CR · Jun 24</button>
+      <button class="filter-btn" style="color:var(--u1-jun23);border-color:rgba(251,113,133,0.3)" onclick="setYearFilter('u1-jun23',this)">2C · Jun 23</button>
+      <button class="filter-btn" style="color:var(--u1-jun23r);border-color:rgba(244,63,94,0.3)" onclick="setYearFilter('u1-jun23r',this)">2CR · Jun 23</button>
+      <button class="filter-btn" style="color:var(--u1-jun22);border-color:rgba(250,204,21,0.3)" onclick="setYearFilter('u1-jun22',this)">2C · Jun 22</button>
+      <button class="filter-btn" style="color:var(--u1-jun22r);border-color:rgba(234,179,8,0.3)" onclick="setYearFilter('u1-jun22r',this)">2CR · Jun 22</button>
+      <button class="filter-btn" style="color:var(--u1-jun21);border-color:rgba(148,163,184,0.3)" onclick="setYearFilter('u1-jun21',this)">2C · Jun 21</button>
+      <button class="filter-btn" style="color:#94a3b8;border-color:rgba(148,163,184,0.2)" onclick="setYearFilter('unit1',this)">All Unit 1</button>
+    </div>
+  </div>
+
+  <div class="card-counter" id="card-counter">Card 1 of 0</div>
+
+  <div class="card-area" id="card-area">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="card-face card-front">
+        <div class="card-meta">
+          <div class="card-spec" id="card-spec">SPEC</div>
+          <div class="card-paper-badge" id="card-badge"></div>
+          <div class="card-qnum" id="card-qnum"></div>
+        </div>
+        <div class="card-topic" id="card-topic">TOPIC</div>
+        <div class="card-q" id="card-q">Loading...</div>
+        <div class="card-marks" id="card-marks">● marks</div>
+        <div class="card-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 14v-4m0-4h.01"/></svg>
+          Tap to reveal answer
+        </div>
+      </div>
+      <div class="card-face card-back">
+        <div class="answer-label">Answer</div>
+        <ul class="answer-list" id="answer-list"></ul>
+        <div class="card-marks" id="card-marks-back">● marks</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-btns">
+    <button class="result-btn btn-review" id="btn-review" onclick="markCard('review')">⚑ Need Review</button>
+    <button class="result-btn btn-know" id="btn-know" onclick="markCard('known')">✓ Got It</button>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-secondary" onclick="prevCard()">← Prev</button>
+    <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+    <button class="btn btn-secondary" onclick="shuffleCards()">⇌ Shuffle</button>
+    <button class="btn btn-danger" onclick="resetAll()">↺ Reset All</button>
+  </div>
+
+  <div class="done-screen" id="done-screen">
+    <div class="done-score" id="done-score">0%</div>
+    <div class="done-label">Known in this set — nice work!</div>
+    <button class="btn btn-primary" style="margin:2rem auto 0;display:inline-flex" onclick="resetAll()">Start Again</button>
+  </div>
+
+  <div class="card-list">
+    <div class="section-title">All Cards</div>
+    <div id="mini-list"></div>
+  </div>
+</div>
+
+<script>
+const PAPER_LABELS = {
+  june1cr:'1CR · Jun 25', june1c:'1C · Jun 25', nov1c:'1C · Nov 25', multi:'Multi-paper',
+  'u1-nov25':'2C · Nov 25', 'u1-jun25':'2C · Jun 25', 'u1-jun25r':'2CR · Jun 25',
+  'u1-jun24':'2C · Jun 24', 'u1-jun24r':'2CR · Jun 24',
+  'u1-jun23':'2C · Jun 23', 'u1-jun23r':'2CR · Jun 23',
+  'u1-jun22':'2C · Jun 22', 'u1-jun22r':'2CR · Jun 22',
+  'u1-jun21':'2C · Jun 21',
+};
+const BADGE_CLASS = {
+  june1cr:'badge-june1cr', june1c:'badge-june1c', nov1c:'badge-nov1c', multi:'badge-multi',
+  'u1-nov25':'badge-u1-nov25', 'u1-jun25':'badge-u1-jun25', 'u1-jun25r':'badge-u1-jun25r',
+  'u1-jun24':'badge-u1-jun24', 'u1-jun24r':'badge-u1-jun24r',
+  'u1-jun23':'badge-u1-jun23', 'u1-jun23r':'badge-u1-jun23r',
+  'u1-jun22':'badge-u1-jun22', 'u1-jun22r':'badge-u1-jun22r',
+  'u1-jun21':'badge-u1-jun21',
+};
+const STORAGE_KEY  = 'igcse_chem_flashcard_v2';
+
+const ALL_CARDS = [
+  {spec:"1.25",topic:"Calculations",paper:"june1c",qnum:"Q7(c)(ii)",q:"Write a balanced chemical equation for iron reacting with oxygen to form Fe₂O₃.",marks:"2 marks",a:["4Fe + 3O₂ → 2Fe₂O₃","Check: 4 Fe each side ✓, 6 O each side ✓"]},
+  {spec:"1.29",topic:"Calculations",paper:"june1cr",qnum:"Q2(b)",q:"Calculate the volume of H₂ produced when 16.25 g of zinc reacts with excess H₂SO₄. [Zn Ar=65, molar volume = 24 000 cm³]",marks:"2 marks",a:["Moles Zn = 16.25 ÷ 65 = 0.25 mol","Moles H₂ = 0.25 mol (1:1 ratio)","Volume = 0.25 × 24 000 = 6000 cm³"]},
+  {spec:"1.29",topic:"Calculations",paper:"june1cr",qnum:"Q9(c)",q:"Calculate the maximum mass of AlBr₃ from 5.60 g of Br₂. [2Al + 3Br₂ → 2AlBr₃] [Br₂ Mr=160, AlBr₃ Mr=267]",marks:"3 marks",a:["Moles Br₂ = 5.60 ÷ 160 = 0.035 mol","Moles AlBr₃ = 0.035 × (2/3) = 0.02333 mol","Mass = 0.02333 × 267 = 6.23 g"]},
+  {spec:"1.31",topic:"Calculations",paper:"nov1c",qnum:"Q9(d)",q:"Show that x = 5 in CuSO₄.xH₂O. [Empty tube=20.50g, tube+hydrated=26.74g, tube+anhydrous=24.49g] [CuSO₄ Mr=159.5, H₂O Mr=18]",marks:"5 marks",a:["Mass CuSO₄ = 24.49 − 20.50 = 3.99 g","Mass H₂O = 26.74 − 24.49 = 2.25 g","Moles CuSO₄ = 3.99 ÷ 159.5 = 0.025 mol","Moles H₂O = 2.25 ÷ 18 = 0.125 mol","Ratio = 0.125 ÷ 0.025 = 5 → x = 5 ✓"]},
+  {spec:"1.31",topic:"Calculations",paper:"june1cr",qnum:"Q5(a)(i)",q:"How do you find the mass of oxygen in a sample of lead oxide PbO heated with hydrogen?",marks:"1 mark",a:["Subtract the mass after heating (mass of lead) from the mass before heating","mass O = mass before − mass after heating"]},
+  {spec:"5.4",topic:"Ionic Bonding",paper:"multi",qnum:"Q7(c) · Q2(b)(i)",q:"Describe in terms of electrons what happens when sodium reacts with oxygen.",marks:"2 marks",a:["Each sodium atom LOSES one electron → forms Na⁺","The oxygen atom GAINS two electrons (one from each Na) → forms O²⁻"]},
+  {spec:"5.4",topic:"Ionic Bonding",paper:"nov1c",qnum:"Q2(b)(i)",q:"What must a dot-and-cross diagram for sodium oxide (Na₂O) show?",marks:"2 marks",a:["Two Na⁺ ions each with empty outer shell, charge shown as 1+","One O²⁻ ion with 8 electrons in outer shell, charge shown as 2−","Only outer electrons need to be shown"]},
+  {spec:"5.5",topic:"Ionic Bonding",paper:"june1c",qnum:"Q2(a)(i)",q:"Why does solid NaCl NOT conduct electricity?",marks:"1 mark",a:["The ions are in fixed positions in the giant ionic lattice","They are not free to move — charge cannot flow"]},
+  {spec:"5.5",topic:"Ionic Bonding",paper:"multi",qnum:"Q2(a) · Q2(b)(iii)",q:"Explain ionic bonding in terms of electrostatic attraction.",marks:"2 marks",a:["Ionic bonding is the strong electrostatic force of attraction","Between oppositely charged ions (e.g. Na⁺ and Cl⁻)"]},
+  {spec:"5.6",topic:"Ionic Bonding",paper:"june1c",qnum:"Q2(a)(iii)",q:"Why does MgS have a higher melting point than NaCl?",marks:"2 marks",a:["MgS has Mg²⁺ and S²⁻ (charges of 2+ and 2−)","NaCl has Na⁺ and Cl⁻ (charges of 1+ and 1−)","Greater charge → stronger electrostatic attraction → more energy to break → higher melting point"]},
+  {spec:"5.6",topic:"Ionic Bonding",paper:"nov1c",qnum:"Q2(b)(iii)",q:"Explain why sodium oxide has a high melting point in terms of structure and bonding.",marks:"3 marks",a:["Giant ionic lattice structure","Strong electrostatic forces of attraction between Na⁺ and O²⁻ ions","A large amount of energy is needed to overcome these forces"]},
+  {spec:"5.6",topic:"Ionic Bonding",paper:"june1cr",qnum:"Q7(d)",q:"Explain why sodium (mp 98°C) and sodium oxide (mp 1132°C) have very different melting points. Refer to structure and forces.",marks:"5 marks",a:["Sodium: giant metallic lattice; sodium oxide: giant ionic lattice","Sodium: electrostatic attraction between Na⁺ ions and delocalised electrons","Sodium oxide: electrostatic attraction between Na⁺ and O²⁻ ions","Ionic bonds in Na₂O are stronger than metallic bonds in Na","More energy needed to break ionic bonds → sodium oxide has far higher melting point"]},
+  {spec:"5.11",topic:"Covalent Bonding",paper:"june1c",qnum:"Q3(b)",q:"Describe covalent bonding between two atoms. Refer to electrons and nuclei.",marks:"2 marks",a:["A shared pair of electrons between two atoms","Both nuclei are attracted to the shared pair of electrons"]},
+  {spec:"5.11",topic:"Covalent Bonding",paper:"june1c",qnum:"Q3(d)",q:"Explain why ice has a much lower melting point than diamond.",marks:"5 marks",a:["Ice = simple molecular structure; diamond = giant covalent structure","In ice: weak intermolecular forces between H₂O molecules are broken on melting","In diamond: strong covalent bonds throughout the giant lattice must be broken","Covalent bonds far stronger than intermolecular forces","Much more energy needed for diamond → far higher melting point"]},
+  {spec:"5.11",topic:"Covalent Bonding",paper:"multi",qnum:"Q3(d) · Q5.11",q:"Explain why simple molecular substances have low melting and boiling points.",marks:"2 marks",a:["They have weak intermolecular forces between molecules","Only these weak forces need to be overcome on melting/boiling — NOT the covalent bonds","Little energy needed → low melting/boiling point"]},
+  {spec:"5.12",topic:"Covalent Bonding",paper:"nov1c",qnum:"Q3(c)(ii)",q:"Explain why iodine is a solid but bromine is a liquid at room temperature.",marks:"3 marks",a:["Both are simple molecular substances with weak intermolecular forces","Iodine (I₂) has a greater relative molecular mass than bromine (Br₂)","Stronger intermolecular forces in iodine → more energy needed → solid at room temperature"]},
+  {spec:"6.1",topic:"Group 1",paper:"multi",qnum:"Q1(b) · Q2(a)",q:"How do similarities in Group 1 reactions with water provide evidence they are a family of elements?",marks:"2 marks",a:["All react with water to produce hydrogen gas and an alkaline hydroxide solution","Similar reactions → similar chemical properties → evidence they belong to the same group/family"]},
+  {spec:"6.2",topic:"Group 1",paper:"multi",qnum:"Q1(b) · Q2(a)(ii)",q:"Explain the trend in reactivity going DOWN Group 1.",marks:"3 marks",a:["Going down Group 1, reactivity INCREASES (Li < Na < K < Rb < Cs)","Each element has one more electron shell → outer electron is further from nucleus","Weaker nuclear attraction on outer electron → lost more easily → more reactive"]},
+  {spec:"6.2",topic:"Group 1",paper:"nov1c",qnum:"Q2(a)(ii)",q:"Give one difference in the reaction with water when lithium is used instead of sodium.",marks:"1 mark",a:["Lithium reacts LESS vigorously than sodium","Lithium moves more slowly on the water surface","Trend: reactivity increases down Group 1"]},
+  {spec:"6.5",topic:"Group 7",paper:"multi",qnum:"Q9(a) · Q3(a)",q:"State the colour and physical state of chlorine, bromine and iodine at room temperature.",marks:"3 marks",a:["Chlorine: pale GREEN GAS","Bromine: BROWN/ORANGE LIQUID","Iodine: DARK GREY/PURPLE SOLID"]},
+  {spec:"6.5",topic:"Group 7",paper:"june1cr",qnum:"Q9(a)",q:"Which halogen has the PALEST colour, and what is the general trend in Group 7 colour?",marks:"1 mark",a:["Fluorine has the palest colour (pale yellow)","Colour gets DARKER going down the group","Fluorine → Chlorine (pale green) → Bromine (brown) → Iodine (dark grey/purple)"]},
+  {spec:"6.7",topic:"Group 7",paper:"multi",qnum:"Q9(d) · Q2(e)",q:"Explain how displacement reactions provide evidence for the reactivity trend in Group 7.",marks:"6 marks",a:["A MORE reactive halogen displaces a LESS reactive halogen from its salt solution","Solution turns DARKER = displacement occurred (more reactive halogen present)","Solution turns PALER = no displacement","Chlorine displaces bromine AND iodine → Cl is most reactive","Bromine displaces iodine but NOT chlorine → Br intermediate","Iodine displaces neither → I is least reactive","Reactivity order: Cl > Br > I"]},
+  {spec:"6.9",topic:"Atmosphere",paper:"multi",qnum:"Q8(a) · Q7(c)",q:"State the approximate percentages by volume of the four most abundant gases in dry air.",marks:"4 marks",a:["Nitrogen (N₂) ≈ 78%","Oxygen (O₂) ≈ 21%","Argon (Ar) ≈ 1%","Carbon dioxide (CO₂) ≈ 0.04%"]},
+  {spec:"6.10",topic:"Atmosphere",paper:"june1c",qnum:"Q7(c)(i)",q:"Total air volume = 230 cm³, gas syringe starts at 100 cm³, air = 21% oxygen. Find the final syringe reading after iron absorbs oxygen. (2 s.f.)",marks:"3 marks",a:["Total oxygen in 230 cm³ = 21% × 230 = 48.3 cm³","Oxygen from syringe = 21% × 100 = 21 cm³","Final syringe reading = 100 − 21 = 79 cm³"]},
+  {spec:"6.13",topic:"Atmosphere",paper:"multi",qnum:"Q8(a)(ii) · Q6.13",q:"Explain why increasing CO₂ in the atmosphere may contribute to climate change.",marks:"2 marks",a:["Carbon dioxide is a greenhouse gas","It absorbs heat radiation from the Earth's surface and re-emits it back","More CO₂ → more heat trapped → global warming / climate change"]},
+  {spec:"6.15",topic:"Chemical Tests",paper:"multi",qnum:"Additional",q:"Describe the test for HYDROGEN gas and state the expected result.",marks:"2 marks",a:["Hold a LIT SPLINT near the gas","Hydrogen burns with a SQUEAKY POP"]},
+  {spec:"6.15",topic:"Chemical Tests",paper:"multi",qnum:"Q7(a) · Q3(c)(i)",q:"Describe the test for OXYGEN gas and state the expected result.",marks:"2 marks",a:["Place a GLOWING splint into the gas","The glowing splint RELIGHTS"]},
+  {spec:"6.15",topic:"Chemical Tests",paper:"multi",qnum:"Q3(b)",q:"Describe the test for CARBON DIOXIDE and state the expected result.",marks:"2 marks",a:["Bubble the gas through limewater (calcium hydroxide solution)","The limewater turns MILKY / CLOUDY"]},
+  {spec:"6.15",topic:"Chemical Tests",paper:"multi",qnum:"Q1(b)",q:"Describe the test for AMMONIA gas and state the expected result.",marks:"2 marks",a:["Hold DAMP RED LITMUS paper in the gas","The litmus paper turns BLUE (ammonia is alkaline)"]},
+  {spec:"6.15",topic:"Chemical Tests",paper:"multi",qnum:"Q8(a) · Q2(a)",q:"Describe the test for CHLORINE gas and state the expected result.",marks:"2 marks",a:["Hold damp litmus paper in the gas","The litmus paper is BLEACHED WHITE"]},
+  {spec:"6.16",topic:"Chemical Tests",paper:"multi",qnum:"Q9(b) · Q3(b) · Q1",q:"Describe how to carry out a flame test correctly.",marks:"3 marks",a:["Clean a nichrome/platinum wire by dipping in HCl and heating in flame until no colour appears","Dip the clean wire into the sample / solution of the substance","Hold in a roaring Bunsen flame and observe the colour produced"]},
+  {spec:"6.17",topic:"Chemical Tests",paper:"multi",qnum:"Q3(b) · Q1",q:"State the flame test colours for Li⁺, Na⁺, K⁺, Ca²⁺ and Cu²⁺.",marks:"5 marks",a:["Li⁺ → RED","Na⁺ → YELLOW","K⁺ → LILAC","Ca²⁺ → ORANGE-RED","Cu²⁺ → BLUE-GREEN"]},
+  {spec:"6.17",topic:"Chemical Tests",paper:"june1cr",qnum:"Q3(a)(c)",q:"A compound gives a RED flame and fizzes with HCl. Identify the ions and deduce the formula.",marks:"2 marks",a:["Red flame → Li⁺ (lithium ion)","Fizzing with HCl → CO₃²⁻ (carbonate ion, CO₂ produced)","Formula: Li₂CO₃"]},
+  {spec:"6.17",topic:"Chemical Tests",paper:"nov1c",qnum:"Q1(a)",q:"State the colours of precipitates formed when NaOH is added to Fe²⁺ and Fe³⁺ solutions.",marks:"2 marks",a:["Fe²⁺ → GREEN precipitate","Fe³⁺ → BROWN precipitate"]},
+  {spec:"6.17",topic:"Chemical Tests",paper:"nov1c",qnum:"Q1(b)",q:"How do you confirm NH₄⁺ ions using NaOH solution?",marks:"3 marks",a:["Add NaOH solution to the sample and warm the mixture","Ammonia gas is produced (pungent smell)","Test with damp red litmus paper — it turns blue","This confirms ammonium (NH₄⁺) ions are present"]},
+  {spec:"6.19",topic:"Chemical Tests",paper:"nov1c",qnum:"Q9(a)(i)(ii)",q:"Describe the test for sulfate ions (SO₄²⁻) and give the expected result.",marks:"2 marks",a:["Add ACIDIFIED BARIUM CHLORIDE solution to the sample","A WHITE PRECIPITATE of barium sulfate (BaSO₄) forms","Equation: CuSO₄(aq) + BaCl₂(aq) → BaSO₄(s) + CuCl₂(aq)"]},
+  {spec:"6.21",topic:"Chemical Tests",paper:"multi",qnum:"Q3(e) · Q9(c)(i)",q:"Describe a physical test to show whether a sample of water is pure.",marks:"2 marks",a:["Measure the boiling point — pure water boils at exactly 100°C","OR: measure the melting point — pure water melts at exactly 0°C","Any impurity shifts these values"]},
+  {spec:"7.1",topic:"Rates of Reaction",paper:"nov1c",qnum:"Q5(a)",q:"Calculate the mean rate of reaction in g/s between 10 s and 30 s. [At 10s: 1.5 g CO₂ lost; at 30s: 3.0 g CO₂ lost]",marks:"2 marks",a:["Change in mass = 3.0 − 1.5 = 1.5 g","Change in time = 30 − 10 = 20 s","Mean rate = 1.5 ÷ 20 = 0.075 g/s"]},
+  {spec:"7.1",topic:"Rates of Reaction",paper:"june1c",qnum:"Q4(b)(ii)(iii)",q:"How do you calculate the rate of reaction from a graph at a specific time point?",marks:"2 marks",a:["Draw a TANGENT to the curve at that time point","Rate = gradient of tangent = change in y ÷ change in x","Units: g/s or cm³/s depending on what is measured"]},
+  {spec:"7.2",topic:"Rates of Reaction",paper:"multi",qnum:"Q4(a) · Q5(b)(iii)",q:"State FOUR factors that affect the rate of a reaction.",marks:"4 marks",a:["↑ Surface area of solid → ↑ rate","↑ Concentration of solution → ↑ rate","↑ Temperature → ↑ rate","Use of a catalyst → ↑ rate","↑ Pressure of gas → ↑ rate"]},
+  {spec:"7.3",topic:"Rates of Reaction",paper:"multi",qnum:"Q4(b)(v) · Q5(b)(iii)",q:"Explain how increasing temperature increases the rate of reaction using collision theory.",marks:"4 marks",a:["Increasing temperature gives particles more kinetic energy","Particles move faster → more frequent collisions","More collisions have energy ≥ activation energy","More successful collisions per second → faster rate of reaction"]},
+  {spec:"7.3",topic:"Rates of Reaction",paper:"nov1c",qnum:"Q5(b)(iii)",q:"Using collision theory, explain how LARGER marble chips (same mass) decreases rate of reaction.",marks:"3 marks",a:["Larger chips = SMALLER surface area (for the same mass)","Fewer acid particles can collide with the solid surface per unit time","Fewer successful collisions → slower rate","Total CO₂ produced is the same — only the rate changes"]},
+  {spec:"7.3",topic:"Rates of Reaction",paper:"june1c",qnum:"Q4(b)(v)",q:"Why can the investigation NOT be extended to 65°C or −5°C? Refer to collision theory.",marks:"4 marks",a:["At 65°C: acid would boil/evaporate — too fast to measure accurately","At 65°C: almost all collisions have energy ≥ activation energy — rate too fast","At −5°C: water/acid would freeze — reaction stops","At −5°C: particles have very little KE — almost no collisions reach activation energy"]},
+  {spec:"7.9",topic:"Reversible Reactions",paper:"multi",qnum:"Q8(b) · Q8(a)(ii)",q:"What does the symbol ⇌ mean in a chemical equation?",marks:"1 mark",a:["The reaction is REVERSIBLE","Both the forward and reverse reactions can occur","The reaction can proceed in both directions"]},
+  {spec:"7.10",topic:"Reversible Reactions",paper:"nov1c",qnum:"Q9(c)(ii)(iii)",q:"Describe the reversible reaction of hydrated copper(II) sulfate. What is observed in each direction?",marks:"3 marks",a:["Forward (heating): blue CuSO₄.5H₂O → white CuSO₄ + water","Reverse (add water): white CuSO₄ + water → blue CuSO₄.5H₂O (gets hot)","Equation: CuSO₄.5H₂O ⇌ CuSO₄ + 5H₂O"]},
+  {spec:"7.10",topic:"Reversible Reactions",paper:"june1c",qnum:"Q8(a)(i)(ii)",q:"Describe the reversible reaction of ammonium chloride when heated.",marks:"2 marks",a:["NH₄Cl(s) ⇌ NH₃(g) + HCl(g)","Heating: white solid disappears, pungent gases produced","Cooling: gases recombine → white solid reforms"]},
+  {spec:"7.10",topic:"Reversible Reactions",paper:"june1cr",qnum:"Q8(c)(i)(ii)",q:"The ICl + Cl₂ → ICl₃ reaction. If chlorine supply is removed what is observed?",marks:"2 marks",a:["Yellow crystals (ICl₃) DISAPPEAR","Brown liquid (ICl) REFORMS / appears"]},
+  {spec:"7.14C",topic:"Equilibrium",paper:"nov1c",qnum:"Q10(c)",q:"Conditions change from 400 atm/400°C to 300 atm/500°C for N₂+3H₂⇌2NH₃ (ΔH=−92 kJ/mol). How does yield of ammonia change?",marks:"6 marks",a:["PRESSURE (400→300 atm): 4 moles gas on left, 2 on right","↓ Pressure shifts equilibrium to side with MORE moles of gas → shifts LEFT","Yield of NH₃ DECREASES due to pressure decrease","TEMPERATURE (400→500°C): forward reaction is EXOTHERMIC (ΔH negative)","↑ Temperature shifts equilibrium in ENDOTHERMIC direction → shifts LEFT","Yield of NH₃ DECREASES due to temperature increase","OVERALL: both changes DECREASE the yield of ammonia"]},
+  {spec:"7.14C",topic:"Equilibrium",paper:"june1c",qnum:"Q9(b)(ii)",q:"When temperature increases in sealed container, yield of ethanol (C₂H₄+H₂O⇌C₂H₅OH) decreases. Explain why using the reaction profile.",marks:"3 marks",a:["The reaction profile shows products at LOWER energy than reactants → forward reaction is EXOTHERMIC","Increasing temperature shifts equilibrium in the ENDOTHERMIC direction (reverse reaction)","More ethanol decomposes back to ethene + water → yield of ethanol decreases"]},
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"multi",qnum:"Q9(a) · Q7(a)(i)(ii)",q:"State the conditions for manufacturing ethanol by hydration of ethene.",marks:"3 marks",a:["Reactants: ethene + steam","Temperature: about 300°C","Pressure: 60–70 atm","Catalyst: phosphoric acid (H₃PO₄)"]},
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"multi",qnum:"Q7(b)(i)(ii) · Q9(b)",q:"Explain why fermentation must occur at 30–40°C and in the ABSENCE of air.",marks:"3 marks",a:["Below 30°C: enzymes in yeast work too slowly / low enzyme activity","Above 40°C: enzymes are DENATURED / destroyed","30–40°C = optimum temperature range for yeast enzymes","Absence of air: prevents oxidation of ethanol → ethanoic acid (vinegar)"]},
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"nov1c",qnum:"Q7(b)(ii)",q:"Write the word and symbol equation for fermentation of glucose.",marks:"2 marks",a:["glucose → ethanol + carbon dioxide","C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂","Conditions: yeast enzymes, 30–40°C, absence of oxygen/air"]},
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"multi",qnum:"Q10(b)(iii) · Q4",q:"State the functional group present in all esters and what they smell like.",marks:"2 marks",a:["Ester functional group: —COO— (or C(=O)—O—)","Esters have a distinctive FRUITY smell","Used as food flavourings and in perfumes"]},
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"june1cr",qnum:"Q10(b)(iv)",q:"Name the ester with structural formula CH₃CH₂COOCH₂CH₃.",marks:"1 mark",a:["Ethyl propanoate","Acid part: CH₃CH₂COO— = propanoate (from propanoic acid)","Alcohol part: —CH₂CH₃ = ethyl (from ethanol)"]},
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"multi",qnum:"Q7(c)(ii) · Q10(b)(iv)",q:"Name the carboxylic acid and alcohol that form ester CH₃COOCH₂CH₂CH₂CH₃.",marks:"2 marks",a:["Carboxylic acid: ETHANOIC ACID (CH₃COOH)","Alcohol: BUTAN-1-OL / butanol (C₄H₉OH)","The ester formed is called butyl ethanoate"]},
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"multi",qnum:"Q6(c) · Q4(c)",q:"Describe the preparation of ethyl ethanoate from ethanol and ethanoic acid.",marks:"3 marks",a:["Mix ethanol + ethanoic acid in a boiling tube","Add a few drops of concentrated sulfuric acid (CATALYST)","Heat in a WATER BATH for several minutes — NOT a Bunsen (ethanol is flammable)","Ethyl ethanoate has formed when a distinctive FRUITY smell is detected"]},
+  {spec:"8.16",topic:"Organic Chemistry",paper:"multi",qnum:"Q6(a) · Q5(b)(i) · Q6(b)(i)",q:"What is an addition polymer and how is it formed?",marks:"2 marks",a:["An addition polymer is formed by joining many small molecules called MONOMERS","Monomers must contain a C=C double bond (unsaturated)","Double bonds open up and join together in a long chain — NO other product formed"]},
+  {spec:"8.17",topic:"Organic Chemistry",paper:"june1cr",qnum:"Q6(c)",q:"Draw and describe the repeat unit of poly(chloroethene) / PVC.",marks:"2 marks",a:["Repeat unit: —[CH₂—CHCl]ₙ—","Two C atoms: one with 2H attached, one with 1H and 1Cl attached","Bonds must extend through brackets with subscript n"]},
+  {spec:"8.17",topic:"Organic Chemistry",paper:"june1c",qnum:"Q5(b)(ii)",q:"Draw and describe the repeat unit of poly(propene).",marks:"2 marks",a:["Repeat unit: —[CH₂—CH(CH₃)]ₙ—","Two carbons in the main chain","One carbon has H and CH₃ group attached","Comes from propene (CH₂=CHCH₃) — double bond opens up"]},
+  {spec:"8.18",topic:"Organic Chemistry",paper:"multi",qnum:"Q6(b)(ii) · Q5",q:"What is the monomer of poly(chloroethene)? How do you deduce it from the repeat unit?",marks:"2 marks",a:["Monomer = chloroethene (CH₂=CHCl)","To find monomer: add a C=C double bond between the two backbone carbons","Remove the bonds that extend through the brackets"]},
+  {spec:"8.19",topic:"Organic Chemistry",paper:"multi",qnum:"Q6(e) · Q5(b)(iii)(iv) · Q6(c)(ii)",q:"Explain TWO problems with the disposal of addition polymers.",marks:"4 marks",a:["1. INERT/NOT BIODEGRADABLE: cannot be broken down by microorganisms → persists in landfill for a very long time","2. BURNING: produces toxic gases — e.g. PVC → HCl gas; all polymers produce CO₂ → greenhouse gas → climate change"]},
+  {spec:"8.19",topic:"Organic Chemistry",paper:"june1cr",qnum:"Q6(d)",q:"A chain of poly(chloroethene) has Mr = 254 000. [monomer Mr = 62.5] Calculate the number of carbon atoms.",marks:"2 marks",a:["Number of repeat units = 254 000 ÷ 62.5 = 4064","Each repeat unit has 2 carbon atoms","Total carbon atoms = 4064 × 2 = 8128"]},
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // UNIT 1 PAPERS — ALL PRIORITY TOPIC QUESTIONS WITH OFFICIAL MS WORDING
+  // Papers used: 2C Nov25, 2C Jun25, 2CR Jun25, 2C Jun24, 2CR Jun24,
+  //              2C Jun23, 2CR Jun23, 2C Jun22, 2CR Jun22, 2C Jun21
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── 4CH1/2C NOVEMBER 2025 ────────────────────────────────────────────────
+
+  // 6.5 — halogen colours table (Nov 25)
+  {spec:"6.5",topic:"Group 7",paper:"u1-nov25",qnum:"Q2(a)",
+   q:"Complete the table: state and colour of fluorine, chlorine, bromine and iodine at 25°C.",marks:"3 marks",
+   a:["Fluorine: GAS, pale yellow","Chlorine: GAS, (pale) green","Bromine: LIQUID, brown","Iodine: SOLID, dark grey"]},
+
+  // 6.5 — Astatine state prediction (Nov 25)
+  {spec:"6.5",topic:"Group 7",paper:"u1-nov25",qnum:"Q2(b)",
+   q:"Suggest the physical state of astatine at 25°C. Give a reason.",marks:"1 mark",
+   a:["Solid","Trend going DOWN Group 7: gas → gas → liquid → solid","Each successive element has a higher boiling point — astatine follows this trend"]},
+
+  // 6.7 — displacement reactions provide evidence for reactivity trend (Nov 25)
+  {spec:"6.7",topic:"Group 7",paper:"u1-nov25",qnum:"Q2(e)",
+   q:"Explain how displacement reactions involving halogens and halides provide evidence for the trend in reactivity in Group 7. Include examples.",marks:"5 marks",
+   a:["Reactivity DECREASES down Group 7 (F > Cl > Br > I)","A MORE reactive halogen displaces a LESS reactive halogen from a solution of its halide ions","Example: Chlorine displaces bromine — Cl₂ + 2KBr → 2KCl + Br₂ — solution turns orange/brown","Example: Bromine displaces iodine — Br₂ + 2KI → 2KBr + I₂ — solution turns brown","Example of non-reaction: iodine does NOT displace bromide ions — iodine less reactive than bromine"]},
+
+  // 7.2 — method to compare two catalysts effectiveness (Nov 25)
+  {spec:"7.2",topic:"Rates of Reaction",paper:"u1-nov25",qnum:"Q5(c)",
+   q:"Describe a method to show which catalyst — MnO₂ or KI — is more effective for the decomposition of H₂O₂.",marks:"5 marks",
+   a:["Add the SAME MASS of each catalyst to separate conical flasks","Add the SAME VOLUME and SAME CONCENTRATION of H₂O₂ to each flask","Keep TEMPERATURE constant throughout","Start the timer — record volume of O₂ produced at regular intervals (e.g. every 30 s)","Plot volume vs time graph for each catalyst — compare the GRADIENT","The steeper gradient / faster rate = the more effective catalyst"]},
+
+  // 7.1 — rate from graph: higher concentration gives steeper initial curve (Nov 25)
+  {spec:"7.1",topic:"Rates of Reaction",paper:"u1-nov25",qnum:"Q5(b)(i)",
+   q:"A student uses 0.020 mol/dm³ H₂O₂. In a second experiment they use 0.025 mol/dm³. Describe how the second curve on a volume vs time graph would differ.",marks:"2 marks",
+   a:["The second curve starts STEEPER (faster initial rate) because concentration is higher","It levels off at the SAME final volume of O₂ (same amount of H₂O₂ moles if same volume used)"]},
+
+  // 8.4C — conditions for hydration of ethene (Nov 25)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(a)(i)(ii)",
+   q:"State the other reactant needed, the pressure, and the catalyst for manufacturing ethanol by hydration of ethene.",marks:"3 marks",
+   a:["Other reactant: STEAM (water vapour)","Pressure: 60–70 atm (atmospheres)","Catalyst: PHOSPHORIC ACID (H₃PO₄) — ALLOW sulfuric acid"]},
+
+  // 8.5C — prevent ethanoic acid formation (Nov 25)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(b)(i)",
+   q:"State the condition needed to prevent the formation of ethanoic acid during fermentation.",marks:"1 mark",
+   a:["Anaerobic conditions / absence of air / absence of oxygen","If oxygen is present it would OXIDISE ethanol to form ethanoic acid"]},
+
+  // 8.5C — why fermentation needs 30–40°C (Nov 25)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(b)(ii)",
+   q:"Explain why fermentation must happen in the range 30°C to 40°C.",marks:"2 marks",
+   a:["Below 30°C: enzymes (in yeast) are INACTIVE / work too slowly — rate too low","Above 40°C: yeast cells / enzymes are DENATURED — they lose their shape and stop working","ALLOW: (yeast contains) enzymes that need an optimum temperature"]},
+
+  // 8.10C — ester functional group + fruity smell (Nov 25)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(c)(i)",
+   q:"Draw the displayed formula of the ester CH₃COOCH₂CH₂CH₂CH₃ (butyl ethanoate).",marks:"2 marks",
+   a:["Ester functional group: —C(=O)—O— must be shown correctly","Full displayed formula shows all C—H bonds, the C=O bond, and the C—O—C ester linkage","Acid part: CH₃CO— Alcohol part: —OCH₂CH₂CH₂CH₃"]},
+
+  // 8.13C — name carboxylic acid and alcohol from ester formula (Nov 25)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(c)(ii)",
+   q:"The ester CH₃COOCH₂CH₂CH₂CH₃ is formed from a carboxylic acid and an alcohol. Name the carboxylic acid and the alcohol.",marks:"2 marks",
+   a:["Carboxylic acid: ETHANOIC ACID (CH₃COOH)","Alcohol: BUTAN-1-OL / butanol (CH₃CH₂CH₂CH₂OH)"]},
+
+  // ── 4CH1/2C JUNE 2025 ────────────────────────────────────────────────────
+
+  // 5.4 — Mg and O electron transfer (Jun 25)
+  {spec:"5.4",topic:"Ionic Bonding",paper:"u1-jun25",qnum:"Q3(c)",
+   q:"Draw diagrams to show the electron arrangement in the Mg²⁺ ion and the O²⁻ ion in magnesium oxide. Include charges.",marks:"3 marks",
+   a:["Mg²⁺: electron configuration 2,8 — charge shown as 2+","O²⁻: electron configuration 2,8 — charge shown as 2−","Both ions have a full outer shell (same configuration as neon)"]},
+
+  // 5.5 — conductivity: water / solid MgCl₂ / aqueous MgCl₂ (Jun 25)
+  {spec:"5.5",topic:"Ionic Bonding",paper:"u1-jun25",qnum:"Q3(d)",
+   q:"Explain why (i) water, (ii) solid magnesium chloride, and (iii) aqueous magnesium chloride differ in their ability to conduct electricity. Refer to structure and bonding.",marks:"5 marks",
+   a:["Water is COVALENT — it has no charged particles / no ions","So there are no free charged particles — water cannot conduct","Solid MgCl₂ is IONIC — but ions are in FIXED positions in the lattice","So ions cannot move → solid MgCl₂ cannot conduct","Aqueous MgCl₂ — ions are FREE TO MOVE in solution → can carry charge → conducts electricity"]},
+
+  // 7.9 — what does ⇌ symbol mean (Jun 25)
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun25",qnum:"Q6(a)(ii)",
+   q:"State what the symbol ⇌ represents.",marks:"1 mark",
+   a:["The reaction is REVERSIBLE","The reaction can go BOTH forwards and backwards","ALLOW: goes both ways / can go forwards and backwards at the same time"]},
+
+  // 7.14C — H₂+I₂⇌2HI: temperature increase → yield increases (Jun 25)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun25",qnum:"Q6(b)(i)",
+   q:"H₂(g) + I₂(g) ⇌ 2HI(g) ΔH = +26 kJ/mol. Temperature is increased from 500°C to 600°C. Explain the effect on the yield of HI at equilibrium.",marks:"2 marks",
+   a:["Yield of HI INCREASES","The forward reaction is ENDOTHERMIC (ΔH = +26 kJ/mol)","Increasing temperature shifts equilibrium in the endothermic direction → shifts RIGHT → more HI produced"]},
+
+  // 7.14C — H₂+I₂⇌2HI: pressure decrease → NO effect (Jun 25)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun25",qnum:"Q6(b)(ii)",
+   q:"H₂(g) + I₂(g) ⇌ 2HI(g). Pressure is decreased from 2 atm to 1 atm. Explain the effect on the yield of HI at equilibrium.",marks:"2 marks",
+   a:["NO EFFECT on the yield of hydrogen iodide","There are the SAME number of moles of gas on both sides: 2 mol LHS, 2 mol RHS","When moles are equal on both sides, changing pressure does NOT shift the equilibrium position"]},
+
+  // 8.4C — ethanol manufacture: role of sulfuric acid (Jun 25)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(i)",
+   q:"State the role of sulfuric acid in the preparation of ethyl ethanoate.",marks:"1 mark",
+   a:["Catalyst / to speed up the reaction","ALLOW: acid catalyst"]},
+
+  // 8.5C — why heat in water bath not Bunsen (Jun 25)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(ii)",
+   q:"State why the student heats the ethanol/ethanoic acid mixture in a water bath instead of directly with a Bunsen burner.",marks:"1 mark",
+   a:["Ethanol (and ethyl ethanoate) is FLAMMABLE / can ignite","A Bunsen burner flame could ignite the alcohol — water bath is safer"]},
+
+  // 8.10C — how to know ester has formed (Jun 25)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(iii)",
+   q:"State how a student would know that the ester ethyl ethanoate has formed.",marks:"1 mark",
+   a:["A distinctive / fruity / sweet smell is detected","ALLOW: an oily layer forms on the surface of the solution"]},
+
+  // 8.13C — name ester from ethanoic acid + ethanol (Jun 25)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c) context",
+   q:"Ethanoic acid reacts with ethanol to form an ester. Name the ester formed.",marks:"1 mark",
+   a:["Ethyl ethanoate","Acid part: CH₃COO— = ethanoate (from ethanoic acid)","Alcohol part: —CH₂CH₃ = ethyl (from ethanol)"]},
+
+  // ── 4CH1/2CR JUNE 2025 ───────────────────────────────────────────────────
+
+  // 6.1 — Group 1 reaction with water: state symbols (2CR Jun 25)
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(a)(i)",
+   q:"Complete the equation for the reaction between lithium and water, adding state symbols: 2Li( ) + 2H₂O( ) → 2LiOH( ) + H₂( )",marks:"2 marks",
+   a:["2Li(s) + 2H₂O(l) → 2LiOH(aq) + H₂(g)","All four state symbols must be correct to score full marks"]},
+
+  // 6.1 — Two observations when Li added to water (2CR Jun 25)
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(a)(ii)",
+   q:"Give two observations made when lithium is added to water.",marks:"2 marks",
+   a:["Effervescence / bubbles of gas produced","Lithium floats / moves on the surface / gets smaller / disappears","REJECT: melts / burning / flame"]},
+
+  // 6.2 — Explain why potassium is more reactive than lithium (2CR Jun 25)
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(b)(ii)",
+   q:"Explain why potassium is more reactive than lithium. Refer to electronic structure in your answer.",marks:"3 marks",
+   a:["Potassium has a BIGGER atom / more electron shells / outer electron is FURTHER from the nucleus","The outer electron is LESS attracted to the nucleus in potassium / more shielded by inner shells","So the outer electron in potassium is MORE EASILY LOST → potassium is more reactive"]},
+
+  // 5.4 — electrons lost/gained when Na reacts with O (2CR Jun 25)
+  {spec:"5.4",topic:"Ionic Bonding",paper:"u1-jun25r",qnum:"Q5(c)",
+   q:"Describe, in terms of electrons, what happens when sodium reacts with oxygen.",marks:"2 marks",
+   a:["Each sodium atom LOSES one electron → forms Na⁺","Oxygen GAINS two electrons (one from each sodium atom) → forms O²⁻","ACCEPT correctly labelled diagrams showing electron transfer"]},
+
+  // 5.6 — Why Na₂O melting point is much higher than Na (2CR Jun 25)
+  {spec:"5.6",topic:"Ionic Bonding",paper:"u1-jun25r",qnum:"Q5(d)",
+   q:"Explain why sodium (mp 98°C) and sodium oxide (mp 1132°C) have very different melting points. Refer to structure and forces.",marks:"5 marks",
+   a:["Sodium: GIANT METALLIC lattice — electrostatic attraction between positive Na⁺ ions and delocalised electrons","Sodium oxide: GIANT IONIC lattice — electrostatic attraction between oppositely charged Na⁺ and O²⁻ ions","Ionic bonds in Na₂O are STRONGER than metallic bonds in Na","More energy is required to overcome the bonds in sodium oxide than in sodium","So sodium oxide has a MUCH HIGHER melting point than sodium"]},
+
+  // 8.4C — conditions for fermentation: yeast, 30°C (2CR Jun 25)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(a)(i)(ii)",
+   q:"Name the substance added to cause fermentation of glucose solution, and state the most suitable temperature.",marks:"2 marks",
+   a:["Substance: YEAST (ALLOW: zymase / enzymes from yeast)","Most suitable temperature: 30°C (ALLOW: any value 20–40°C inclusive)"]},
+
+  // 8.5C — why fermentation in absence of air (2CR Jun 25)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(a)(iii)",
+   q:"Explain why fermentation is done in the absence of air.",marks:"2 marks",
+   a:["Oxygen in air would REACT WITH / OXIDISE ethanol","To form ETHANOIC ACID (vinegar / carboxylic acid)","ALLOW: in the presence of air glucose reacts with oxygen so ethanol does not form"]},
+
+  // 8.13C — name ester B formed from ethanol + ethanoic acid (2CR Jun 25)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(c)(ii)",
+   q:"Ethanoic acid reacts with ethanol to form ester B. Name ester B.",marks:"1 mark",
+   a:["Ethyl ethanoate"]},
+
+  // ── 4CH1/2C JUNE 2024 ────────────────────────────────────────────────────
+
+  // 1.29 — mass of Mg needed to react with HCl (Jun 24)
+  {spec:"1.29",topic:"Calculations",paper:"u1-jun24",qnum:"Q3(c)(iii)",
+   q:"Calculate the minimum mass of magnesium needed to react with 25.0 cm³ of 2.00 mol/dm³ HCl. [Mg + 2HCl → MgCl₂ + H₂] [Ar Mg=24]",marks:"3 marks",
+   a:["Moles of HCl = (25 × 2.00) ÷ 1000 = 0.050 mol","Moles of Mg = 0.050 ÷ 2 = 0.025 mol (1:2 ratio)","Mass of Mg = 0.025 × 24 = 0.60 g"]},
+
+  // 6.2 — explain why Na is more reactive than Li (Jun 24)
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun24",qnum:"Q1(b)",
+   q:"Explain, in terms of electron configuration, why sodium is more reactive than lithium.",marks:"3 marks",
+   a:["Sodium has MORE electron shells than lithium / outer shell is FURTHER from the nucleus in sodium","There is LESS attraction between the outer electron and the nucleus in sodium","So the outer electron in sodium is MORE EASILY LOST → sodium is more reactive"]},
+
+  // 8.5C — fermentation: conditions (absence of air + temperature range) (Jun 24)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun24",qnum:"Q4(a)",
+   q:"Fermentation needs to be done in the absence of air. Give TWO other conditions needed for fermentation.",marks:"2 marks",
+   a:["Temperature: 30–40°C (ALLOW any value in this range)","Yeast (enzyme catalyst) — ALLOW: enzymes / zymase"]},
+
+  // 8.5C — why fermentation must be anaerobic (Jun 24)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun24",qnum:"Q4(b)",
+   q:"Explain why fermentation needs to be done in the absence of air.",marks:"2 marks",
+   a:["Oxygen in the air would react with / OXIDISE ethanol","To form ETHANOIC ACID — not ethanol","ALLOW: ethanol would not be formed; CO₂ and H₂O would form instead"]},
+
+  // 8.10C — ester functional group from displayed formula (Jun 24)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun24",qnum:"Q5(d)(i)",
+   q:"The structural formula of an ester is CH₃COOCH₂CH₂CH₂CH₃. What is the name of this ester?",marks:"1 mark",
+   a:["Butyl ethanoate","Acid part: CH₃COO— = ethanoate (from ethanoic acid)","Alcohol part: —(CH₂)₃CH₃ = butyl (from butan-1-ol)"]},
+
+  // ── 4CH1/2CR JUNE 2024 ───────────────────────────────────────────────────
+
+  // 7.9 — ⇌ symbol: what does it mean (2CR Jun 24)
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun24r",qnum:"Q7(a)(i)",
+   q:"In the equation C₂H₄(g) + H₂O(g) ⇌ C₂H₅OH(g), what does the symbol ⇌ represent?",marks:"1 mark",
+   a:["The reaction is REVERSIBLE","ALLOW: goes both ways / can go forwards and backwards at the same time","IGNORE references to equilibrium alone"]},
+
+  // 7.14C — pressure decrease on C₂H₄+H₂O ⇌ C₂H₅OH → yield decreases (2CR Jun 24)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun24r",qnum:"Q7(a)(i)",
+   q:"C₂H₄(g) + H₂O(g) ⇌ C₂H₅OH(g). Pressure is decreased. Explain the effect on the yield of ethanol at equilibrium.",marks:"2 marks",
+   a:["Yield of ethanol DECREASES","There are MORE moles of gas on the LEFT (2 mol LHS, 1 mol RHS)","Decreasing pressure shifts equilibrium towards MORE moles of gas → shifts LEFT → less ethanol"]},
+
+  // 7.14C — catalyst has no effect on equilibrium yield (2CR Jun 24)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun24r",qnum:"Q7(a)(ii)",
+   q:"Predict the effect of adding a catalyst on the yield of ethanol at equilibrium C₂H₄+H₂O ⇌ C₂H₅OH. Give a reason.",marks:"2 marks",
+   a:["The yield of ethanol does NOT change","A catalyst increases the rate of the forward AND backward reactions EQUALLY","The position of equilibrium is unchanged — catalyst only speeds up reaching equilibrium"]},
+
+  // 8.4C — enthalpy change for ethene + steam → ethanol is exothermic (2CR Jun 24)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q7(b)(ii)",
+   q:"Explain, in terms of bonds broken and bonds made, why the reaction C₂H₄ + H₂O → C₂H₅OH is exothermic.",marks:"2 marks",
+   a:["More energy is RELEASED when bonds are made (in products) than is TAKEN IN when bonds are broken (in reactants)","Breaking bonds is endothermic and making bonds is exothermic — more energy released than taken in"]},
+
+  // 8.13C — ethyl ethanoate name from ester equation (2CR Jun 24)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q7(c)(ii)",
+   q:"Ethanoic acid reacts with ethanol. Name the ester (ester A) that forms.",marks:"1 mark",
+   a:["Ethyl ethanoate"]},
+
+  // ── 4CH1/2C JUNE 2023 ────────────────────────────────────────────────────
+
+  // 6.9 — lowest % gas in atmosphere (Jun 23)
+  {spec:"6.9",topic:"Atmosphere",paper:"u1-jun23",qnum:"Q2(a)",
+   q:"Which of these gases has the LOWEST percentage by volume in the atmosphere? [argon, carbon dioxide, nitrogen, oxygen]",marks:"1 mark",
+   a:["Carbon dioxide — ≈ 0.04%","Order: N₂ (78%) > O₂ (21%) > Ar (1%) > CO₂ (0.04%)"]},
+
+  // 6.10 — % oxygen calculation from iron filings syringe experiment (Jun 23)
+  {spec:"6.10",topic:"Atmosphere",paper:"u1-jun23",qnum:"Q2(c)",
+   q:"Gas in flask = 280 cm³, syringe at start = 100 cm³, syringe at end = 27 cm³. Calculate the percentage of oxygen in the air sample. (2 s.f.)",marks:"4 marks",
+   a:["Volume of oxygen removed = 100 − 27 = 73 cm³","Total volume of air at start = 280 + 100 = 380 cm³","% oxygen = (73 ÷ 380) × 100 = 19.2%","To 2 s.f. = 19%"]},
+
+  // 6.13 — increasing CO₂ causes environmental problem (Jun 23)
+  {spec:"6.13",topic:"Atmosphere",paper:"u1-jun23",qnum:"Q2(d)",
+   q:"Explain why an increasing amount of CO₂ in the atmosphere is likely to cause a problem for the environment.",marks:"2 marks",
+   a:["Carbon dioxide is a GREENHOUSE GAS","It traps heat / infrared radiation in the atmosphere (greenhouse effect)","This causes CLIMATE CHANGE / global warming / sea level rise / flooding"]},
+
+  // 7.9 — equilibrium symbol (Jun 23)
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun23",qnum:"Q7 context",
+   q:"The equation for steam reforming is CH₄(g) + H₂O(g) ⇌ CO(g) + 3H₂(g). What does ⇌ represent?",marks:"1 mark",
+   a:["The reaction is REVERSIBLE","Both forward and reverse reactions occur simultaneously","ALLOW: goes both ways / can go forwards and backwards"]},
+
+  // 7.14C — Ni catalyst: no effect on yield (Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23",qnum:"Q7(b)",
+   q:"CH₄(g) + H₂O(g) ⇌ CO(g) + 3H₂(g). Explain the effect of using a nickel catalyst on the yield of hydrogen at equilibrium.",marks:"2 marks",
+   a:["NO EFFECT on the yield of hydrogen","A catalyst increases the rate of the forward AND backward reactions EQUALLY","The position of equilibrium does not change — it only speeds up reaching equilibrium"]},
+
+  // 7.14C — temperature decrease → yield of H₂ decreases (Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23",qnum:"Q7(c)(i)",
+   q:"CH₄(g)+H₂O(g) ⇌ CO(g)+3H₂(g) ΔH=+206 kJ/mol. Temperature is reduced from 700°C to 600°C. Explain the effect on the yield of H₂.",marks:"2 marks",
+   a:["Yield of H₂ DECREASES","The forward reaction is ENDOTHERMIC (ΔH positive)","Decreasing temperature shifts equilibrium in the EXOTHERMIC direction → shifts LEFT → less H₂"]},
+
+  // 7.14C — pressure decrease → yield of H₂ increases (Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23",qnum:"Q7(c)(ii)",
+   q:"CH₄(g)+H₂O(g) ⇌ CO(g)+3H₂(g). Pressure is reduced from 5 atm to 4 atm. Explain the effect on the yield of H₂.",marks:"2 marks",
+   a:["Yield of H₂ INCREASES","There are MORE moles of gas on the RIGHT (2 mol LHS, 4 mol RHS)","Decreasing pressure shifts equilibrium towards the side with MORE moles of gas → shifts RIGHT → more H₂"]},
+
+  // 8.4C — fermentation equation (Jun 23)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q3(a)",
+   q:"Complete the equation for fermentation of glucose: C₆H₁₂O₆ → _____ + _____",marks:"2 marks",
+   a:["C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂","Products: ETHANOL and CARBON DIOXIDE","Both formulae correct AND balanced to score both marks"]},
+
+  // 8.4C — fill in table: conditions for hydration vs fermentation (Jun 23)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q3(b)(i)",
+   q:"Complete the table for hydration of ethene: catalyst, temperature, pressure.",marks:"3 marks",
+   a:["Catalyst: PHOSPHORIC ACID (H₃PO₄) — ALLOW sulfuric acid / H₂SO₄","Temperature: 300°C","Pressure: 60–70 atmospheres"]},
+
+  // 8.5C — why fermentation in absence of air (Jun 23)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q3(c)",
+   q:"Explain why fermentation needs to occur in the absence of air.",marks:"2 marks",
+   a:["Oxygen would OXIDISE / react with ethanol","To form ETHANOIC ACID (vinegar)","ALLOW: fermentation is anaerobic — ethanol not produced in aerobic conditions"]},
+
+  // 8.10C — acid catalyst role in ester formation (Jun 23)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q6(a)(i)",
+   q:"Give the name of a suitable catalyst to increase the rate of esterification (ethanoic acid + methanol).",marks:"1 mark",
+   a:["Sulfuric acid / H₂SO₄","ALLOW: hydrochloric acid / HCl or phosphoric acid / H₃PO₄"]},
+
+  // 8.10C — how to know ester has formed (Jun 23)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q6(a)(ii)",
+   q:"State how you would know that an ester has formed.",marks:"1 mark",
+   a:["A distinctive / sweet / FRUITY smell is detected","ALLOW: an oily layer forms on the surface of the reaction mixture"]},
+
+  // 8.13C — methyl ethanoate (ethanoic acid + methanol) (Jun 23)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q6(a)(iii)",
+   q:"Give the name of the ester formed when ethanoic acid reacts with methanol.",marks:"1 mark",
+   a:["Methyl ethanoate","Acid part: CH₃COO— = ethanoate (from ethanoic acid)","Alcohol part: —CH₃ = methyl (from methanol)"]},
+
+  // ── 4CH1/2CR JUNE 2023 ───────────────────────────────────────────────────
+
+  // 6.1 — Group 1: why is potassium less reactive than lithium? (2CR Jun 23)
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun23r",qnum:"Q6(c)",
+   q:"Explain why lithium is LESS reactive than potassium. Refer to atomic structure.",marks:"3 marks",
+   a:["Lithium has FEWER shells than potassium / outer electron is CLOSER to the nucleus in lithium","The outer electron in lithium is MORE STRONGLY attracted to the nucleus","So the outer electron in lithium is LESS EASILY LOST → lithium is less reactive"]},
+
+  // 6.2 — Group 1: two observations when potassium added to water (2CR Jun 23)
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun23r",qnum:"Q6(b)(ii)",
+   q:"Give TWO observations when a small piece of potassium is added to water (other than bubbles of hydrogen).",marks:"2 marks",
+   a:["LILAC / purple flame","Potassium MELTS / turns into a ball / moves on the surface / gets smaller","ALLOW: potassium disappears / dissolves"]},
+
+  // 6.5 — halogen colour and state table (2CR Jun 23)
+  {spec:"6.5",topic:"Group 7",paper:"u1-jun23r",qnum:"Q2(a)",
+   q:"Complete the table: physical state at room temperature and colour of fluorine and bromine.",marks:"2 marks",
+   a:["Fluorine: GAS, pale green / yellow","Bromine: LIQUID, red-brown / orange-brown"]},
+
+  // 6.7 — Cl₂ added to NaI: colour change and explanation (2CR Jun 23)
+  {spec:"6.7",topic:"Group 7",paper:"u1-jun23r",qnum:"Q2(c)",
+   q:"A student mixes aqueous chlorine with aqueous sodium iodide. Explain the colour change that occurs.",marks:"3 marks",
+   a:["Mixture turns BROWN (red-brown / orange-brown)","Iodine (I₂) is DISPLACED / produced — Cl₂ + 2NaI → 2NaCl + I₂","Chlorine is MORE REACTIVE than iodine so it displaces iodide ions from solution"]},
+
+  // 7.9 — two characteristics of dynamic equilibrium (2CR Jun 23)
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun23r",qnum:"Q7(a)(i)",
+   q:"Give TWO characteristics of a reaction at dynamic equilibrium.",marks:"2 marks",
+   a:["The forward and REVERSE reactions occur at the SAME RATE","The concentrations of reactants and products REMAIN CONSTANT","REJECT: concentrations of reactants and products are EQUAL"]},
+
+  // 7.14C — catalyst has no effect on equilibrium (2CR Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23r",qnum:"Q7(a)(ii)",
+   q:"2H₂(g)+CO(g) ⇌ CH₃OH(g). Give a reason why adding a catalyst does NOT affect the yield of methanol.",marks:"1 mark",
+   a:["A catalyst increases the rate of the forward AND backward reactions EQUALLY","So the position of equilibrium is unchanged — the catalyst does not affect the yield"]},
+
+  // 7.14C — temperature decrease → yield of methanol increases (2CR Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23r",qnum:"Q7(a)(iii)",
+   q:"2H₂(g)+CO(g) ⇌ CH₃OH(g) ΔH=−119 kJ/mol. Temperature is decreased at constant pressure. Explain the effect on yield of methanol.",marks:"2 marks",
+   a:["Yield of methanol INCREASES","The forward reaction is EXOTHERMIC (ΔH negative)","Decreasing temperature shifts equilibrium in the EXOTHERMIC direction → shifts RIGHT → more CH₃OH"]},
+
+  // 7.14C — pressure increase → yield of methanol increases (2CR Jun 23)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23r",qnum:"Q7(a)(iv)",
+   q:"2H₂(g)+CO(g) ⇌ CH₃OH(g). Pressure is increased at constant temperature. Explain the effect on yield of methanol.",marks:"2 marks",
+   a:["Yield of methanol INCREASES","There are MORE moles of gas on the LEFT (3 mol LHS, 1 mol RHS)","Increasing pressure shifts equilibrium towards FEWER moles of gas → shifts RIGHT → more CH₃OH"]},
+
+  // 8.10C — ester functional group (2CR Jun 23)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun23r",qnum:"Q7(c)(i)",
+   q:"Draw a circle around the ester functional group in the displayed formula of the ester.",marks:"1 mark",
+   a:["The ester functional group is: —C(=O)—O— (also written —COO—)","It sits between the acid-derived part and the alcohol-derived part of the molecule"]},
+
+  // ── 4CH1/2C JUNE 2022 ────────────────────────────────────────────────────
+
+  // 6.5 — which halogen has palest colour (Jun 22)
+  {spec:"6.5",topic:"Group 7",paper:"u1-jun22",qnum:"Q3(a)",
+   q:"Which halogen has the PALEST colour? [astatine, bromine, fluorine, iodine]",marks:"1 mark",
+   a:["Fluorine — pale yellow (palest of all halogens)","Colour gets DARKER going down Group 7","Order (palest to darkest): F → Cl → Br → I → At"]},
+
+  // 6.7 — F more reactive than Cl: explanation using electronic configuration (Jun 22)
+  {spec:"6.7",topic:"Group 7",paper:"u1-jun22",qnum:"Q3(c)",
+   q:"Explain the relative reactivities of fluorine and chlorine. [F: 2.7, Cl: 2.8.7]",marks:"4 marks",
+   a:["Fluorine is MORE REACTIVE than chlorine","The outer shell is CLOSER to the nucleus in fluorine / fluorine has fewer shells / smaller atomic radius","There is a STRONGER attraction for an incoming electron in fluorine","So fluorine ACCEPTS / GAINS an electron more readily → more reactive"]},
+
+  // 6.17 — flame test for Li⁺ AND test for Cl⁻ in LiCl (Jun 22)
+  {spec:"6.17",topic:"Chemical Tests",paper:"u1-jun22",qnum:"Q3(d)(ii)",
+   q:"Describe tests to show that the product of Li + Cl₂ is lithium chloride (LiCl). Include tests for BOTH ions.",marks:"5 marks",
+   a:["Test for Li⁺: flame test — clean wire in HCl, dip in sample, hold in Bunsen flame","Li⁺ gives a RED flame (ALLOW crimson/scarlet)","Test for Cl⁻: add dilute nitric acid then silver nitrate solution","A WHITE precipitate of silver chloride forms","Both tests together confirm lithium chloride"]},
+
+  // 6.13 — CO₂ environmental problem (Jun 22)
+  {spec:"6.13",topic:"Atmosphere",paper:"u1-jun22",qnum:"Q1(b)",
+   q:"State one environmental problem caused by increasing amounts of CO₂ in the atmosphere.",marks:"1 mark",
+   a:["Climate change / global warming","ALLOW: oceans becoming more acidic","ALLOW: effects of global warming e.g. melting of polar ice caps / flooding / wildfires","REJECT: references to ozone layer"]},
+
+  // 5.4 — electron changes when Mg reacts with O (Jun 22)
+  {spec:"5.4",topic:"Ionic Bonding",paper:"u1-jun22",qnum:"Q4(b)",
+   q:"Describe the changes in electronic configurations when magnesium reacts with oxygen to form MgO.",marks:"2 marks",
+   a:["Magnesium LOSES two electrons → becomes Mg²⁺ (configuration 2,8)","Oxygen GAINS two electrons → becomes O²⁻ (configuration 2,8)","ACCEPT: magnesium gives two electrons to oxygen"]},
+
+  // 8.4C — hydration conditions: complete missing table (Jun 22 via Jun 23 table)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun22",qnum:"Q5(b) context",
+   q:"State the catalyst used in the hydration of ethene to produce ethanol.",marks:"1 mark",
+   a:["Phosphoric acid (H₃PO₄)","ALLOW: sulfuric acid / H₂SO₄"]},
+
+  // 8.5C — two conditions for fermentation (other than absence of air) (Jun 22)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22",qnum:"Q5(a)(ii)(iii)",
+   q:"State two conditions needed for fermentation (other than absence of air).",marks:"2 marks",
+   a:["Temperature: 30°C (ALLOW any value 20–40°C inclusive)","Yeast (ALLOW: enzymes from yeast / zymase)"]},
+
+  // 8.10C — ester functional group: name the ester CH₃COOCH₂CH₂CH₂CH₃ (Jun 22)
+  {spec:"8.10C",topic:"Organic Chemistry",paper:"u1-jun22",qnum:"Q5(d)(i)",
+   q:"What is the name of the ester CH₃COOCH₂CH₂CH₂CH₃?",marks:"1 mark",
+   a:["Butyl ethanoate","Acid part: CH₃COO— = ethanoate (ethanoic acid)","Alcohol part: —(CH₂)₃CH₃ = butyl (butan-1-ol)"]},
+
+  // ── 4CH1/2CR JUNE 2022 ───────────────────────────────────────────────────
+
+  // 6.1 — two observations when sodium added to water (2CR Jun 22)
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun22r",qnum:"Q5(a)(iii) context",
+   q:"Give two observations (other than bubbles) when sodium is added to cold water.",marks:"2 marks",
+   a:["Sodium FLOATS / moves on the surface of the water","Sodium MELTS / forms a ball / gets smaller / disappears","ALLOW: white trail / sodium dissolves"]},
+
+  // 6.2 — why potassium is more reactive than sodium (2CR Jun 22)
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun22r",qnum:"Q4(c)",
+   q:"Explain, in terms of electronic configuration, why potassium is more reactive than sodium. [Na: 2.8.1, K: 2.8.8.1]",marks:"3 marks",
+   a:["Potassium has MORE electron shells / outer electron is FURTHER from the nucleus in potassium","There is MORE SHIELDING by inner shells in potassium / LESS attraction between outer electron and nucleus","So the outer electron in potassium is MORE EASILY LOST → potassium is more reactive"]},
+
+  // 7.9 — ⇌ symbol meaning (2CR Jun 22)
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun22r",qnum:"Q7(a)(i)",
+   q:"State what the symbol ⇌ represents in a chemical equation.",marks:"1 mark",
+   a:["The reaction is REVERSIBLE — it can go in both directions","ALLOW: goes both ways / can go forwards and backwards simultaneously"]},
+
+  // 7.14C — temperature increase: exothermic forward reaction → yield decreases (2CR Jun 22)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun22r",qnum:"Q7(b)(i)",
+   q:"N₂(g)+3H₂(g) ⇌ 2NH₃(g) ΔH=−92 kJ/mol. Temperature is increased from 450°C to 550°C. Explain the effect on yield of ammonia.",marks:"2 marks",
+   a:["Yield of ammonia DECREASES","The forward reaction is EXOTHERMIC (ΔH negative)","Increasing temperature shifts equilibrium in the ENDOTHERMIC direction → shifts LEFT → less NH₃"]},
+
+  // 7.14C — pressure increase: fewer moles on RHS → yield increases (2CR Jun 22)
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun22r",qnum:"Q7(b)(ii)",
+   q:"N₂(g)+3H₂(g) ⇌ 2NH₃(g). Pressure is increased from 200 to 300 atm. Explain the effect on yield of ammonia.",marks:"2 marks",
+   a:["Yield of ammonia INCREASES","There are FEWER moles of gas on the RIGHT (4 mol LHS, 2 mol RHS)","Increasing pressure shifts equilibrium towards the side with FEWER moles of gas → shifts RIGHT → more NH₃"]},
+
+  // 8.5C — fermentation: conditions (2CR Jun 22)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(a)(ii)(iii)",
+   q:"State two conditions needed for fermentation (other than absence of air/oxygen).",marks:"2 marks",
+   a:["Temperature: 30°C (ALLOW 20–40°C)","Yeast (ALLOW: zymase / enzymes from yeast)"]},
+
+  // 8.5C — why absence of air in fermentation (2CR Jun 22)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(a) context",
+   q:"Explain why fermentation is done in the absence of air.",marks:"2 marks",
+   a:["Oxygen in air would OXIDISE / react with ethanol","To form ETHANOIC ACID (vinegar) instead of ethanol"]},
+
+  // 8.13C — ethanol reacts with ethanoic acid: name ester A (2CR Jun 22)
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q7(c)(ii)",
+   q:"Ethanoic acid reacts with ethanol to form ester A. Give the name of ester A.",marks:"1 mark",
+   a:["Ethyl ethanoate"]},
+
+  // ── 4CH1/2C JUNE 2021 ────────────────────────────────────────────────────
+
+  // 6.9 — % gases in atmosphere (Jun 21 via table)
+  {spec:"6.9",topic:"Atmosphere",paper:"u1-jun21",qnum:"Q2(a)(ii)",
+   q:"Name the most abundant gas in the atmosphere.",marks:"1 mark",
+   a:["Nitrogen (N₂)","Nitrogen makes up approximately 78% of dry air by volume"]},
+
+  // 6.13 — CO₂ greenhouse effect (Jun 21)
+  {spec:"6.13",topic:"Atmosphere",paper:"u1-jun21",qnum:"Q1(b)",
+   q:"State an environmental problem caused by increasing amounts of CO₂ in the atmosphere.",marks:"1 mark",
+   a:["Climate change / global warming","ALLOW: greenhouse effect / melting of polar ice caps / flooding / sea level rise","REJECT: references to the ozone layer"]},
+
+  // 6.15 — test for hydrogen gas (Jun 21)
+  {spec:"6.15",topic:"Chemical Tests",paper:"u1-jun21",qnum:"Q6(a)(i)",
+   q:"Give a test for hydrogen gas. State the expected result.",marks:"1 mark",
+   a:["Hold a LIGHTED / burning splint near the gas","Hydrogen burns with a SQUEAKY POP","REJECT: glowing splint"]},
+
+  // 6.15 — test for chlorine gas (Jun 21)
+  {spec:"6.15",topic:"Chemical Tests",paper:"u1-jun21",qnum:"Q6(a)(ii)",
+   q:"Give a test for chlorine gas. State the expected result.",marks:"2 marks",
+   a:["Hold DAMP LITMUS PAPER in the gas","The litmus paper is BLEACHED WHITE / decolourised","ACCEPT: damp blue litmus turns red then is bleached"]},
+
+  // 8.4C — compare hydration vs fermentation — 6 mark discussion (Jun 21)
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun21",qnum:"Q5(c)(i)",
+   q:"Discuss the advantages and disadvantages of using fermentation rather than hydration to produce ethanol.",marks:"6 marks",
+   a:["ADV: Sugar cane is RENEWABLE; crude oil / ethene is FINITE / non-renewable","ADV: Fermentation uses LOWER TEMPERATURE (30°C vs 300°C) → less energy needed","ADV: Fermentation uses LOWER PRESSURE (1 atm vs 60–70 atm) → cheaper, safer equipment","ADV: Yeast is a natural substance — less hazardous than phosphoric acid","DIS: Fermentation is SLOWER than hydration","DIS: Fermentation gives IMPURE ethanol — needs further purification (distillation)","DIS: Fermentation is a BATCH process; hydration is CONTINUOUS → hydration more efficient","DIS: Growing sugar cane uses land that could be used to grow food crops"]},
+
+  // 8.5C — fermentation equation (Jun 21)
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun21",qnum:"Q5(c)(ii)",
+   q:"Complete the chemical equation for fermentation: C₆H₁₂O₆ → _____ + _____",marks:"1 mark",
+   a:["C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂","Products: 2 moles of ETHANOL and 2 moles of CARBON DIOXIDE"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C NOV 2025
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"6.5",topic:"Group 7",paper:"u1-nov25",qnum:"Q2(a)",
+   q:"Complete the table: give the state at 25°C of fluorine, and the colour of chlorine.",marks:"3 marks",
+   a:["Fluorine: GAS, pale yellow","Chlorine: GAS, (pale) green","Bromine: liquid, brown (given)","Iodine: solid, dark grey (given)","ALLOW light green for chlorine"]},
+
+  {spec:"6.7",topic:"Group 7",paper:"u1-nov25",qnum:"Q2(e)",
+   q:"Explain how displacement reactions involving halogens and halides provide evidence for the trend in reactivity in Group 7. Include examples.",marks:"5 marks",
+   a:["Reactivity DECREASES going down Group 7","A MORE reactive halogen DISPLACES a less reactive halogen from a solution of its halide ions","M3: this happens when the halogen reacts with a solution of the halide","Example colour change showing displacement e.g. Cl₂ + KBr → solution turns orange/brown (Br₂ formed)","Example where displacement does NOT occur e.g. I₂ + KCl → no colour change","Evidence: Cl > Br > I in reactivity"]},
+
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(a)(i)",
+   q:"Steam can be used to manufacture ethanol. Give the OTHER reactant needed for this reaction.",marks:"1 mark",
+   a:["Ethene (C₂H₄)","The reaction is: CH₂=CH₂ + H₂O → C₂H₅OH (hydration of ethene)"]},
+
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(a)(ii)",
+   q:"State the pressure AND catalyst used to manufacture ethanol from ethene and steam.",marks:"2 marks",
+   a:["Pressure: 60–70 atmospheres (atm)","Catalyst: phosphoric acid (H₃PO₄)","ALLOW sulfuric acid / H₂SO₄"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(b)(i)",
+   q:"State the condition needed to prevent the formation of ethanoic acid during fermentation.",marks:"1 mark",
+   a:["Anaerobic conditions / absence of air / absence of oxygen","IGNORE just 'respiration'"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(b)(ii)",
+   q:"Explain why fermentation needs to happen in the range 30°C to 40°C.",marks:"2 marks",
+   a:["Below 30°C: enzymes become INACTIVE / rate of fermentation is too slow","Above 40°C: yeast cells / enzymes become DENATURED","ACCEPT: enzymes need an OPTIMUM temperature (30–40°C)"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-nov25",qnum:"Q4(c)(ii)",
+   q:"The structural formula of an ester is CH₃COOCH₂CH₂CH₂CH₃. Deduce the name of the carboxylic acid and the alcohol that react to form this ester.",marks:"2 marks",
+   a:["Carboxylic acid: ETHANOIC ACID (CH₃COOH)","Alcohol: BUTAN-1-OL / butanol (CH₃CH₂CH₂CH₂OH)","Ester name: butyl ethanoate","ACCEPT acetic acid / butan-1-ol / 1-butanol"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C JUN 2025
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"7.3",topic:"Rates of Reaction",paper:"u1-jun25",qnum:"Q2(d)",
+   q:"Explain why increasing the temperature of hydrochloric acid affects the rate of its reaction with magnesium. Refer to collision theory.",marks:"4 marks",
+   a:["M1: Rate of reaction INCREASES","M2: Particles / molecules have MORE kinetic energy / move FASTER","M3: MORE COLLISIONS per unit time","M4: MORE SUCCESSFUL collisions / more particles have energy ≥ activation energy","ALLOW: more frequent collisions for M3 and M4 combined"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(i)",
+   q:"In the preparation of ethyl ethanoate, state the role of sulfuric acid.",marks:"1 mark",
+   a:["Catalyst / to speed up the reaction","IGNORE references to activation energy"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(ii)",
+   q:"Explain why the student heats ethanol + ethanoic acid in a WATER BATH instead of directly with a Bunsen burner flame.",marks:"1 mark",
+   a:["Ethanol is (in)flammable / can ignite","ACCEPT: ethyl ethanoate is flammable","ACCEPT: the mixture is flammable / can ignite"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25",qnum:"Q4(c)(iii)",
+   q:"State how the student would know that ethyl ethanoate has formed.",marks:"1 mark",
+   a:["Distinctive / fruity / sweet smell is detected","ACCEPT: oily liquid forms","IGNORE: 'nice smell'"]},
+
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun25",qnum:"Q6(a)(ii)",
+   q:"In the equation H₂(g) + I₂(g) ⇌ 2HI(g), state what the symbol ⇌ represents.",marks:"1 mark",
+   a:["Reversible reaction / the reaction goes both ways / can go forwards and backwards","ALLOW: reaction that goes both ways simultaneously","IGNORE: (dynamic) equilibrium alone"]},
+
+  {spec:"6.15",topic:"Chemical Tests",paper:"u1-jun25",qnum:"Q6(a)(i)",
+   q:"Give the test for hydrogen gas and state the result.",marks:"1 mark",
+   a:["A lighted / burning splint (held near the gas) — it POPS / burns with a squeaky pop","REJECT: a glowing splint","IGNORE: 'squeaky pop test' alone without the method"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2CR JUN 2025
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(a)(ii)",
+   q:"Give TWO observations made when a small piece of lithium is added to water.",marks:"2 marks",
+   a:["Any two of: (1) EFFERVESCENCE / fizzing / bubbling","(2) Lithium GETS SMALLER / disappears / dissolves","(3) Lithium FLOATS on the surface","(4) Lithium MOVES on the surface","REJECT: melts / molten sphere / flame / burning"]},
+
+  {spec:"1.29",topic:"Calculations",paper:"u1-jun25r",qnum:"Q4(a)(iii)",
+   q:"Show by calculation that the mass of lithium that produces 375 cm³ of H₂ at rtp is between 0.20 g and 0.30 g. [Ar Li=7, molar volume=24 000 cm³]",marks:"3 marks",
+   a:["Moles H₂ = 375 ÷ 24 000 = 0.015625 mol","Moles Li = 0.015625 × 2 = 0.03125 mol (from 2Li : 1H₂)","Mass Li = 0.03125 × 7 = 0.219 g → between 0.20 and 0.30 g ✓"]},
+
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(b)(i)",
+   q:"Give ONE observation that is DIFFERENT when a small piece of potassium, instead of lithium, is added to water.",marks:"1 mark",
+   a:["Any one of: potassium MELTS / turns into a ball","Potassium MOVES FASTER / faster effervescence","Lilac / purple / pink FLAME observed","Potassium DISAPPEARS / dissolves faster","REJECT: same observations as lithium"]},
+
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun25r",qnum:"Q4(b)(ii)",
+   q:"Explain why potassium is MORE REACTIVE than lithium. Refer to electronic structure in your answer.",marks:"3 marks",
+   a:["M1: Potassium has a BIGGER atom / MORE SHELLS / outer electron is FURTHER from the nucleus","M2: The outer electron is LESS ATTRACTED to the nucleus / more SHIELDED from nuclear attraction","M3: So the outer electron is MORE EASILY LOST in potassium","REJECT: 'more outer shells' for M1","IGNORE: electrons (plural) in M1 and M2"]},
+
+  {spec:"5.6",topic:"Ionic Bonding",paper:"u1-jun25r",qnum:"Q5(d)",
+   q:"Explain why sodium (mp 98°C) and sodium oxide (mp 1132°C) have very different melting points. Refer to: the structures of sodium and sodium oxide, and the forces between the particles.",marks:"5 marks",
+   a:["Sodium: GIANT METALLIC structure / lattice","Sodium: electrostatic attraction between POSITIVE IONS and DELOCALISED ELECTRONS","Sodium oxide: GIANT IONIC structure / ionic lattice","Sodium oxide: electrostatic attraction between OPPOSITELY CHARGED IONS (Na⁺ and O²⁻)","M5 (independent mark): MORE energy is required to overcome the bonds in sodium oxide than sodium — so sodium oxide has a higher melting point","REJECT: intermolecular forces for M1/M2/M3/M4"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(a)(i)",
+   q:"Name the substance that is added to cause the fermentation of glucose solution.",marks:"1 mark",
+   a:["Yeast","ALLOW: zymase / enzymes from yeast"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(a)(ii)",
+   q:"Which temperature is most suitable for fermentation? [A: 0°C, B: 10°C, C: 30°C, D: 100°C]",marks:"1 mark",
+   a:["C — 30°C","0°C and 10°C are too LOW — enzymes work too slowly","100°C is too HIGH — enzymes are DENATURED","Optimum range for yeast enzymes is 30–40°C"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(a)(iii)",
+   q:"Explain why fermentation is done in the ABSENCE of air.",marks:"2 marks",
+   a:["M1: Oxygen in air would REACT WITH ethanol / alcohol","M2: To form ETHANOIC ACID (vinegar / carboxylic acid)","OR: M1: In the presence of air, glucose would react with oxygen","M2: So ethanol would not form — CO₂ and H₂O would form instead","ALLOW: ethanol would be OXIDISED to form ethanoic acid"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun25r",qnum:"Q7(c)(i)",
+   q:"In the esterification reaction between ethanol and ethanoic acid, identify compound A (carboxylic acid) and compound C (small molecule product).",marks:"2 marks",
+   a:["Compound A: ETHANOIC ACID — displayed formula: H-C(=O)-O-H with CH₃ group","Compound C: WATER (H₂O)","The reaction: ethanoic acid + ethanol ⇌ ethyl ethanoate + water"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C JUN 2024
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun24",qnum:"Q1(b)",
+   q:"Explain, in terms of electron configuration, why sodium is MORE REACTIVE than lithium.",marks:"3 marks",
+   a:["M1: The outer shell is FURTHER from the nucleus in sodium / sodium has MORE shells / sodium has a larger atomic radius","M2: There is LESS attraction to the nucleus for the outer electron in sodium","M3: So the outer electron is MORE EASILY LOST in sodium","ALLOW: there is more shielding in sodium / sodium has a larger atom","IGNORE: electrons (plural) in M1 and M2 — do NOT allow in M3"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2CR JUN 2024
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q4(a)",
+   q:"Fermentation must be done in the absence of air. Give TWO OTHER conditions needed for fermentation.",marks:"2 marks",
+   a:["M1: Temperature 30°C (ALLOW any value 20–40°C inclusive)","M2: Yeast (ALLOW enzymes from yeast / zymase)","IGNORE: glucose / anaerobic / pressure"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q4(b)",
+   q:"Explain why fermentation needs to be done in the ABSENCE of air.",marks:"2 marks",
+   a:["M1: Oxygen in the air would REACT WITH ethanol / ethanol would be oxidised","M2: To form ETHANOIC ACID / carboxylic acid / vinegar","OR: M1: Ethanol would not be formed / only CO₂ and H₂O formed","ALLOW: correct reference to aerobic respiration"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q4(c)(i)",
+   q:"Complete the equation for fermentation: C₆H₁₂O₆ → 2C₂H₅OH + ______",marks:"1 mark",
+   a:["2CO₂","The full equation: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂"]},
+
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun24r",qnum:"Q7(a)(i)",
+   q:"C₂H₄(g) + H₂O(g) ⇌ C₂H₅OH(g). The pressure on the equilibrium mixture is DECREASED. Predict the effect on the yield of ethanol. Give a reason.",marks:"2 marks",
+   a:["M1: Yield of ethanol DECREASES","M2: Equilibrium shifts to the side with MORE moles of gas — there are 2 mol on the LHS and 1 mol on the RHS","Decreasing pressure shifts equilibrium LEFT → less ethanol","ALLOW: reaction shifts in the direction of MORE molecules of gas"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun24r",qnum:"Q7(c)(ii)",
+   q:"Ethanoic acid reacts with ethanol. Give the name of ester A formed.",marks:"1 mark",
+   a:["Ethyl ethanoate","Acid part: ethanoate (from ethanoic acid)","Alcohol part: ethyl (from ethanol)","IGNORE hyphens"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C JUN 2023
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q3(a)",
+   q:"Complete the equation for fermentation: C₆H₁₂O₆ → _____ + _____",marks:"2 marks",
+   a:["M1: Both formulae correct — 2C₂H₅OH + 2CO₂","M2: Correct balancing","C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂","ACCEPT CH₃CH₂OH for ethanol","ALLOW multiples and fractions"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q3(c)",
+   q:"Explain why fermentation needs to occur in the ABSENCE of air.",marks:"2 marks",
+   a:["M1: Oxygen would OXIDISE / react with ethanol","M2: Which would produce ETHANOIC ACID / CH₃COOH","OR: M1: Fermentation needs to be ANAEROBIC","M2: So ethanol will be formed / otherwise only CO₂ and H₂O would form","ALLOW: acetic acid / vinegar"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q6(a)(ii)",
+   q:"How would you know that an ester has formed during the reaction between ethanoic acid and methanol?",marks:"1 mark",
+   a:["Distinctive / sweet / FRUITY smell is detected","ACCEPT: oily layer forms on the surface","IGNORE: 'nice smell'"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun23",qnum:"Q6(a)(iii)",
+   q:"Give the name of the ester formed when ethanoic acid reacts with methanol.",marks:"1 mark",
+   a:["Methyl ethanoate","Acid part: —OOCCH₃ = ethanoate (from ethanoic acid)","Alcohol part: CH₃— = methyl (from methanol)","Spelling must be correct"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2CR JUN 2023
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"6.5",topic:"Group 7",paper:"u1-jun23r",qnum:"Q2(a)",
+   q:"Complete the table for halogens: give the missing physical state of bromine, and missing colour of fluorine.",marks:"2 marks",
+   a:["Fluorine: gas, PALE YELLOW (missing colour)","Chlorine: gas, green (given)","Bromine: LIQUID (missing state), red-brown","Iodine: solid, grey (given)","Dilute aqueous Cl₂ solution = colourless (given)"]},
+
+  {spec:"6.1",topic:"Group 1",paper:"u1-jun23r",qnum:"Q6(b)(ii)",
+   q:"When potassium is added to water, bubbles of hydrogen are observed. Give TWO OTHER observations.",marks:"2 marks",
+   a:["Any two of: (1) LILAC / PURPLE flame observed","(2) Potassium MELTS / turns into a ball","(3) Potassium MOVES on the surface","(4) Potassium gets SMALLER / dissolves","ALLOW: disappears / dissolves","REJECT: other colours / fizzing as an extra observation"]},
+
+  {spec:"6.2",topic:"Group 1",paper:"u1-jun23r",qnum:"Q6(c)",
+   q:"Explain why lithium is LESS REACTIVE than potassium. Refer to atomic structure in your answer.",marks:"3 marks",
+   a:["M1: Lithium has FEWER SHELLS than potassium / outer electron is CLOSER to the nucleus","M2: Outer electron in lithium is MORE STRONGLY ATTRACTED to the nucleus","M3: So in lithium the outer electron is LESS EASILY LOST","ALLOW: lithium has smaller atoms than potassium","ALLOW: less shielded by inner shells in lithium","ALLOW reverse argument throughout for potassium"]},
+
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun23r",qnum:"Q7(a)(i)",
+   q:"Give TWO characteristics of a reaction at dynamic equilibrium.",marks:"2 marks",
+   a:["M1: The FORWARD and REVERSE reactions occur at the SAME RATE","M2: The CONCENTRATIONS of reactants and products REMAIN CONSTANT","ALLOW: moles / amounts of reactants and products remain constant","REJECT: concentrations of reactants and products are the SAME (not equal, just constant)"]},
+
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun23r",qnum:"Q7(a)(iii)",
+   q:"2H₂(g) + CO(g) ⇌ CH₃OH(g) ΔH = −119 kJ/mol. Temperature is DECREASED at constant pressure. Explain the effect on the yield of methanol.",marks:"2 marks",
+   a:["M1: Yield of methanol INCREASES","M2: The forward reaction is EXOTHERMIC (ΔH negative)","Decreasing temperature shifts equilibrium in the EXOTHERMIC direction → shifts RIGHT → more CH₃OH","ALLOW: reverse reaction is endothermic","M2 dependent on M1 correct or missing"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C JUN 2022
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"6.5",topic:"Group 7",paper:"u1-jun22",qnum:"Q3(b)",
+   q:"Which halogen is a SOLID at room temperature? [A: astatine, B: bromine, C: chlorine, D: fluorine]",marks:"1 mark",
+   a:["A — Astatine (and also iodine, not listed here)","B is incorrect: bromine is a LIQUID","C is incorrect: chlorine is a GAS","D is incorrect: fluorine is a GAS","Solid halogens at room temperature: iodine and astatine"]},
+
+  {spec:"6.16",topic:"Chemical Tests",paper:"u1-jun22",qnum:"Q3(d)(ii)",
+   q:"Lithium reacts with chlorine to form lithium chloride. Describe tests to show that the product is LITHIUM CHLORIDE. (Both Li⁺ and Cl⁻ must be confirmed.)",marks:"5 marks",
+   a:["Test for Li⁺ — M1: FLAME TEST","M2: RED flame is observed (ALLOW crimson / scarlet — REJECT brick red / orange-red)","Test for Cl⁻ — M3: Add NITRIC ACID (to acidify)","M4: Add SILVER NITRATE solution","M5: WHITE PRECIPITATE forms (silver chloride, AgCl)","ALLOW: acidified silver nitrate for M3 and M4 combined","REJECT: HCl or H₂SO₄ as the acid in M3"]},
+
+  {spec:"7.10",topic:"Reversible Reactions",paper:"u1-jun22",qnum:"Q5(c)(iii)",
+   q:"When methanoic acid reacts with propanol in a sealed container, the reaction reaches dynamic equilibrium. Give ONE characteristic of a reaction at dynamic equilibrium.",marks:"1 mark",
+   a:["The forward and backward reactions occur at the SAME RATE","OR: Concentrations of reactants and products REMAIN CONSTANT","ALLOW: amounts/moles/ratios of reactants and products remain constant","REJECT: concentrations are EQUAL / the same (they stay constant, not equal to each other)"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2CR JUN 2022
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(a)(i)",
+   q:"Write a WORD EQUATION for the fermentation of glucose.",marks:"1 mark",
+   a:["glucose → ethanol + carbon dioxide","ACCEPT fully correct chemical equation: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂","IGNORE: yeast in the equation"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(a)(ii)",
+   q:"State the substance that needs to be added for fermentation to occur.",marks:"1 mark",
+   a:["Yeast","IGNORE: zymase / enzymes (accept if yeast mentioned)"]},
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(a)(iii)",
+   q:"State TWO conditions needed for the fermentation of glucose (other than the substance you named).",marks:"2 marks",
+   a:["M1: Temperature 30°C (ACCEPT any value 20–40°C inclusive)","M2: Anaerobic conditions / absence of air / oxygen","IGNORE: yeast","IGNORE: room temperature alone (too vague)"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(b)(i)",
+   q:"Ethanoic acid is heated with butanol in the presence of an acid catalyst. Which of these is the formula of the ester? [A: CH₃COOC₃H₇, B: CH₃COOC₄H₉, C: C₂H₅COOC₄H₉, D: C₃H₇COOC₂H₅]",marks:"1 mark",
+   a:["B — CH₃COOC₄H₉","Ethanoic acid = CH₃COOH → ethanoate part = CH₃COO—","Butanol = C₄H₉OH → butyl part = —C₄H₉","A is propyl ethanoate, C is butyl propanoate, D is ethyl butanoate"]},
+
+  {spec:"8.13C",topic:"Organic Chemistry",paper:"u1-jun22r",qnum:"Q5(b)(ii)",
+   q:"State how you would know that an ester has formed during the reaction of ethanoic acid and butanol.",marks:"1 mark",
+   a:["Sweet / fruity / distinctive smell is detected","ACCEPT: oily layer forms","IGNORE: 'nice smell'"]},
+
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun22r",qnum:"Q7(b)(i)",
+   q:"N₂(g) + 3H₂(g) ⇌ 2NH₃(g) ΔH = −92 kJ/mol. Temperature is increased to 550°C (pressure kept at 200 atm). Explain the effect on the yield of ammonia at equilibrium.",marks:"2 marks",
+   a:["M1: Yield of ammonia DECREASES","M2: The forward reaction is EXOTHERMIC (ΔH negative) / the backward reaction is endothermic","Increasing temperature shifts equilibrium in the ENDOTHERMIC direction → shifts LEFT → less NH₃","IGNORE: references to rate and Le Chatelier","M2 dependent on M1 correct or missing"]},
+
+  {spec:"7.14C",topic:"Equilibrium",paper:"u1-jun22r",qnum:"Q7(b)(ii)",
+   q:"N₂(g) + 3H₂(g) ⇌ 2NH₃(g). Pressure is increased to 300 atm (temperature kept at 450°C). Explain the effect on the yield of ammonia at equilibrium.",marks:"2 marks",
+   a:["M1: Yield of ammonia INCREASES","M2: There are FEWER moles of gas on the right-hand side — 4 mol on LHS, 2 mol on RHS","Increasing pressure shifts equilibrium towards FEWER moles of gas → shifts RIGHT → more NH₃","ALLOW: molecules for moles","M2 dependent on M1 correct or missing"]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4CH1/2C JUN 2021 — additional cards
+  // ═══════════════════════════════════════════════════════════════
+
+  {spec:"8.5C",topic:"Organic Chemistry",paper:"u1-jun21",qnum:"Q5(b)(i)",
+   q:"Ethanol is oxidised by potassium dichromate(VI) and one other reagent. Give the formula of the OTHER reagent needed.",marks:"1 mark",
+   a:["H₂SO₄ (sulfuric acid)","If name and formula given, the NAME must be correct","ALLOW: dilute sulfuric acid / acidified potassium dichromate"]},
+
+  {spec:"8.4C",topic:"Organic Chemistry",paper:"u1-jun21",qnum:"Q5(b)(ii)",
+   q:"State the colour change that occurs when ethanol is heated with potassium dichromate(VI) and dilute H₂SO₄.",marks:"2 marks",
+   a:["FROM: orange (potassium dichromate is orange)","TO: green (chromium(III) ions form)","Colours must be in the CORRECT ORDER","ALLOW: orange/yellow → green"]},
+
+  {spec:"7.9",topic:"Reversible Reactions",paper:"u1-jun21",qnum:"Q5(c)(ii)(iii)",
+   q:"HCOOH + C₃H₇OH ⇌ HCOOC₃H₇ + H₂O. State what the ⇌ symbol means AND give one characteristic of dynamic equilibrium.",marks:"2 marks",
+   a:["⇌ means: the reaction is REVERSIBLE / goes both ways","IGNORE: equilibrium alone","Characteristic of dynamic equilibrium: forward and backward reactions occur at the SAME RATE","OR: concentrations of reactants and products REMAIN CONSTANT","ALLOW: amounts/moles remain constant"]},
+];
+
+let statuses = {};
+let cards = [];
+let current = 0;
+let flipped = false;
+let activeTopicFilter = 'all';
+let activeYearFilter = 'all';
+
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(statuses));
+  } catch(e) {}
+  // Auto-update the export box so it stays current
+  const box = document.getElementById('save-code-box');
+  if (box && Object.keys(statuses).length > 0) {
+    box.value = btoa(JSON.stringify(statuses));
+  }
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { statuses = JSON.parse(saved); return true; }
+  } catch(e) {}
+  return false;
+}
+
+function exportProgress() {
+  const known  = Object.values(statuses).filter(s=>s==='known').length;
+  const review = Object.values(statuses).filter(s=>s==='review').length;
+  if (known + review === 0) {
+    showToast('No progress to export yet — mark some cards first!', 'error');
+    return;
+  }
+  const code = btoa(JSON.stringify(statuses));
+  const box = document.getElementById('save-code-box');
+  box.value = code;
+  box.select();
+  try { document.execCommand('copy'); showToast('✓ Save code copied to clipboard!', 'success'); }
+  catch(e) { showToast('✓ Save code generated — copy it from the box above', 'success'); }
+}
+
+function importProgress() {
+  const box = document.getElementById('save-code-box');
+  const code = box.value.trim();
+  if (!code) {
+    showToast('Paste your save code into the box first', 'error');
+    return;
+  }
+  try {
+    const parsed = JSON.parse(atob(code));
+    // Validate it looks like a statuses object
+    const valid = Object.values(parsed).every(v => v==='known' || v==='review');
+    if (!valid) throw new Error('invalid');
+    statuses = parsed;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(statuses));
+    updateStats();
+    applyFilters();
+    buildMiniList();
+    const known  = Object.values(statuses).filter(s=>s==='known').length;
+    const review = Object.values(statuses).filter(s=>s==='review').length;
+    showToast(`✓ Progress restored! ${known} known, ${review} to review`, 'success');
+  } catch(e) {
+    showToast('Invalid save code — make sure you copied the full code', 'error');
+  }
+}
+
+function getFilteredCards() {
+  return ALL_CARDS.map((c,i) => ({...c, origIdx:i})).filter(c => {
+    const topicOk = activeTopicFilter === 'all' ? true
+      : activeTopicFilter === 'review' ? statuses[c.origIdx] === 'review'
+      : c.spec.startsWith(activeTopicFilter);
+    const yearOk = activeYearFilter === 'all' ? true
+      : activeYearFilter === 'unit1' ? c.paper.startsWith('u1-')
+      : c.paper === activeYearFilter;
+    return topicOk && yearOk;
+  });
+}
+
+function setTopicFilter(f, btn) {
+  activeTopicFilter = f;
+  document.querySelectorAll('#topic-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function setYearFilter(f, btn) {
+  activeYearFilter = f;
+  document.querySelectorAll('#year-filters .filter-btn, .filter-section .filter-row:not(#topic-filters) .filter-btn').forEach(b => {
+    b.classList.remove('active','active-june1cr','active-june1c','active-nov1c');
+  });
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  cards = getFilteredCards();
+  current = 0;
+  flipped = false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  hideResultBtns();
+  updateCard();
+  buildMiniList();
+}
+
+function updateCard() {
+  const cardArea = document.getElementById('card-area');
+  const doneScreen = document.getElementById('done-screen');
+  if (cards.length === 0) {
+    cardArea.style.display = 'none';
+    doneScreen.classList.add('show');
+    document.getElementById('card-counter').textContent = 'No cards match this filter';
+    return;
+  }
+  cardArea.style.display = 'block';
+  doneScreen.classList.remove('show');
+  const c = cards[current];
+  document.getElementById('card-spec').textContent = 'SPEC ' + c.spec;
+  document.getElementById('card-topic').textContent = c.topic.toUpperCase();
+  document.getElementById('card-q').textContent = c.q;
+  document.getElementById('card-marks').textContent = '● ' + c.marks;
+  document.getElementById('card-marks-back').textContent = '● ' + c.marks;
+  const badge = document.getElementById('card-badge');
+  badge.textContent = PAPER_LABELS[c.paper] || c.paper;
+  badge.className = 'card-paper-badge ' + (BADGE_CLASS[c.paper] || 'badge-multi');
+  document.getElementById('card-qnum').textContent = c.qnum || '';
+  const list = document.getElementById('answer-list');
+  list.innerHTML = '';
+  c.a.forEach(pt => { const li = document.createElement('li'); li.textContent = pt; list.appendChild(li); });
+  document.getElementById('card-counter').textContent = 'Card ' + (current+1) + ' of ' + cards.length;
+  updateProgress();
+  highlightMini();
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+  if (flipped) showResultBtns(); else hideResultBtns();
+}
+function showResultBtns() { document.getElementById('btn-know').classList.add('show'); document.getElementById('btn-review').classList.add('show'); }
+function hideResultBtns() { document.getElementById('btn-know').classList.remove('show'); document.getElementById('btn-review').classList.remove('show'); }
+
+function markCard(status) {
+  statuses[cards[current].origIdx] = status;
+  saveProgress(); updateStats();
+  updateMiniStatus(cards[current].origIdx, status);
+  nextCard();
+}
+
+function nextCard() {
+  flipped = false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  hideResultBtns();
+  current = current < cards.length-1 ? current+1 : 0;
+  updateCard();
+}
+function prevCard() {
+  flipped = false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  hideResultBtns();
+  current = current > 0 ? current-1 : cards.length-1;
+  updateCard();
+}
+
+function shuffleCards() {
+  for (let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+  current=0; flipped=false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  hideResultBtns(); updateCard(); buildMiniList();
+}
+
+function resetAll() {
+  if (!confirm('Reset ALL progress? This cannot be undone.')) return;
+  statuses = {}; saveProgress();
+  activeTopicFilter='all'; activeYearFilter='all';
+  document.querySelectorAll('#topic-filters .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('#year-filters .filter-btn, .filter-section:nth-of-type(3) .filter-btn').forEach((b,i)=>{b.classList.remove('active','active-june1cr','active-june1c','active-nov1c');});
+  document.querySelector('#year-filters .filter-btn').classList.add('active');
+  applyFilters(); updateStats();
+}
+
+function updateStats() {
+  const total=ALL_CARDS.length;
+  const known=Object.values(statuses).filter(s=>s==='known').length;
+  const review=Object.values(statuses).filter(s=>s==='review').length;
+  document.getElementById('total-count').textContent=total;
+  document.getElementById('known-count').textContent=known;
+  document.getElementById('review-count').textContent=review;
+  document.getElementById('remain-count').textContent=total-known-review;
+  document.getElementById('done-score').textContent=Math.round((known/total)*100)+'%';
+}
+
+function updateProgress() {
+  const total=ALL_CARDS.length;
+  const done=Object.values(statuses).filter(s=>s!==undefined).length;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-pct').textContent=pct+'%';
+}
+
+function buildMiniList() {
+  const container=document.getElementById('mini-list');
+  container.innerHTML='';
+  cards.forEach((c,i)=>{
+    const div=document.createElement('div');
+    div.className='mini-card'+(i===current?' active-card':'');
+    div.id='mini-'+c.origIdx;
+    div.onclick=()=>{current=i;flipped=false;document.getElementById('flashcard').classList.remove('flipped');hideResultBtns();updateCard();};
+    const status=statuses[c.origIdx]||'unseen';
+    div.innerHTML='<span class="mini-spec">'+c.spec+'</span><span class="mini-badge '+(BADGE_CLASS[c.paper]||'badge-multi')+'">'+PAPER_LABELS[c.paper]+'</span><span class="mini-q">'+c.q+'</span><span class="mini-status '+(status==='known'?'known':status==='review'?'review':'')+'"></span>';
+    container.appendChild(div);
+  });
+}
+
+function highlightMini() {
+  document.querySelectorAll('.mini-card').forEach((el,i)=>el.classList.toggle('active-card',i===current));
+}
+
+function updateMiniStatus(origIdx,status) {
+  const el=document.getElementById('mini-'+origIdx);
+  if(el){const dot=el.querySelector('.mini-status');if(dot)dot.className='mini-status '+(status==='known'?'known':status==='review'?'review':'');}
+}
+
+loadProgress();
+applyFilters();
+updateStats();
+</script>
+
+</body>
+</html>
