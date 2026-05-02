@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>IGCSE Chemistry Nov 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161a24;
+    --card-front: #1c2135;
+    --card-back: #101828;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #f0f2f8;
+    --text-muted: #8890a4;
+    --border: rgba(0,212,255,0.18);
+    --green: #00e5a0;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+/* ── Header ── */
+header {
+width: 100%;
+background: var(–bg);
+border-bottom: 1px solid var(–border);
+padding: 16px 20px 12px;
+text-align: center;
+position: sticky;
+top: 0;
+z-index: 50;
+}
+header h1 {
+font-family: ‘Space Mono’, monospace;
+font-size: 1rem;
+color: var(–accent);
+letter-spacing: 0.06em;
+}
+header p {
+color: var(–text-muted);
+font-size: 0.72rem;
+margin-top: 3px;
+font-family: ‘Space Mono’, monospace;
+}
+.progress-wrap {
+display: flex;
+align-items: center;
+gap: 10px;
+margin: 10px auto 0;
+max-width: 420px;
+}
+.progress-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(–accent), var(–accent2)); border-radius: 4px; transition: width 0.4s; width: 0%; }
+.progress-label { font-family: ‘Space Mono’, monospace; font-size: 0.7rem; color: var(–text-muted); white-space: nowrap; }
+
+/* ── Filter ── */
+.filter-bar {
+width: 100%;
+display: flex;
+gap: 8px;
+padding: 10px 14px;
+overflow-x: auto;
+scrollbar-width: none;
+border-bottom: 1px solid rgba(255,255,255,0.05);
+position: sticky;
+top: 82px;
+background: var(–bg);
+z-index: 40;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-btn {
+flex-shrink: 0;
+background: var(–surface);
+border: 1px solid var(–border);
+color: var(–text-muted);
+font-family: ‘Space Mono’, monospace;
+font-size: 0.65rem;
+padding: 6px 14px;
+border-radius: 20px;
+cursor: pointer;
+white-space: nowrap;
+transition: all 0.2s;
+}
+.filter-btn.active { background: var(–accent); color: #000; border-color: var(–accent); font-weight: 700; }
+
+/* ── Stage ── */
+.stage {
+width: 100%;
+max-width: 560px;
+padding: 30px 20px 10px;
+display: flex;
+flex-direction: column;
+align-items: center;
+position: relative;
+min-height: 420px;
+}
+
+/* Ghost stack */
+.ghost {
+position: absolute;
+width: calc(100% - 40px);
+max-width: 520px;
+height: 320px;
+border-radius: 20px;
+background: var(–card-front);
+border: 1px solid var(–border);
+pointer-events: none;
+}
+.ghost-2 { top: 38px; transform: scale(0.92); opacity: 0.25; z-index: 0; }
+.ghost-1 { top: 22px; transform: scale(0.96); opacity: 0.5;  z-index: 1; }
+
+/* ── Card ── */
+.card-wrap {
+width: 100%;
+max-width: 520px;
+height: 320px;
+perspective: 1200px;
+position: relative;
+z-index: 2;
+cursor: grab;
+user-select: none;
+touch-action: none;
+}
+.card-wrap:active { cursor: grabbing; }
+
+.card-inner {
+width: 100%; height: 100%;
+position: relative;
+transform-style: preserve-3d;
+transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+border-radius: 20px;
+}
+.card-wrap.flipped .card-inner { transform: rotateY(180deg); }
+
+.card-face {
+position: absolute;
+inset: 0;
+border-radius: 20px;
+padding: 24px 26px;
+backface-visibility: hidden;
+-webkit-backface-visibility: hidden;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+
+.card-front {
+background: var(–card-front);
+border: 1px solid var(–border);
+justify-content: space-between;
+}
+.card-back {
+background: var(–card-back);
+border: 1px solid rgba(124,58,237,0.4);
+transform: rotateY(180deg);
+}
+
+/* Swipe labels */
+.lbl {
+position: absolute;
+top: 20px;
+font-family: ‘Space Mono’, monospace;
+font-size: 0.9rem;
+font-weight: 700;
+padding: 5px 12px;
+border-radius: 7px;
+border: 2.5px solid;
+opacity: 0;
+pointer-events: none;
+z-index: 10;
+backface-visibility: hidden;
+-webkit-backface-visibility: hidden;
+}
+.lbl-right { left: 20px;  color: var(–green); border-color: var(–green); transform: rotate(-12deg); }
+.lbl-left  { right: 20px; color: #ff5078;       border-color: #ff5078;      transform: rotate(12deg); }
+
+/* Card tag */
+.card-tag {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.62rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+padding: 4px 10px;
+border-radius: 10px;
+display: inline-block;
+margin-bottom: 12px;
+align-self: flex-start;
+flex-shrink: 0;
+}
+.tag-q1  { background: rgba(0,229,160,0.1);  color: var(–green);  border: 1px solid rgba(0,229,160,0.25); }
+.tag-q2  { background: rgba(0,212,255,0.1);  color: var(–accent); border: 1px solid rgba(0,212,255,0.25); }
+.tag-q3  { background: rgba(255,180,0,0.1);  color: #ffb400;       border: 1px solid rgba(255,180,0,0.25); }
+.tag-q4  { background: rgba(255,80,120,0.1); color: #ff5078;       border: 1px solid rgba(255,80,120,0.25); }
+.tag-q5  { background: rgba(124,58,237,0.1); color: #a78bfa;       border: 1px solid rgba(124,58,237,0.25); }
+.tag-q6  { background: rgba(16,185,129,0.1); color: #34d399;       border: 1px solid rgba(16,185,129,0.25); }
+.tag-q7  { background: rgba(251,146,60,0.1); color: #fb923c;       border: 1px solid rgba(251,146,60,0.25); }
+.tag-q8  { background: rgba(56,189,248,0.1); color: #38bdf8;       border: 1px solid rgba(56,189,248,0.25); }
+.tag-q9  { background: rgba(236,72,153,0.1); color: #f472b6;       border: 1px solid rgba(236,72,153,0.25); }
+.tag-q10 { background: rgba(245,158,11,0.1); color: #fbbf24;       border: 1px solid rgba(245,158,11,0.25); }
+
+/* Question text */
+.q-text {
+font-size: 1.05rem;
+line-height: 1.6;
+color: var(–text);
+flex: 1;
+overflow-y: auto;
+font-weight: 500;
+}
+.flip-hint {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.62rem;
+color: var(–text-muted);
+display: flex;
+align-items: center;
+gap: 5px;
+margin-top: 10px;
+flex-shrink: 0;
+}
+.flip-hint::before { content: ‘↻’; font-size: 0.8rem; }
+
+/* Answer */
+.answer-label {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.62rem;
+letter-spacing: 0.1em;
+color: #a78bfa;
+text-transform: uppercase;
+margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 6px;
+flex-shrink: 0;
+}
+.answer-label::before { content: ‘✓’; color: var(–green); }
+
+.a-text {
+font-size: 1rem;
+line-height: 1.65;
+color: #d0d8ee;
+overflow-y: auto;
+flex: 1;
+font-weight: 400;
+}
+.a-text::-webkit-scrollbar { width: 3px; }
+.a-text::-webkit-scrollbar-thumb { background: var(–accent2); border-radius: 3px; }
+
+.marks {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.62rem;
+color: var(–text-muted);
+align-self: flex-end;
+margin-top: 8px;
+flex-shrink: 0;
+}
+
+code {
+font-family: ‘Space Mono’, monospace;
+background: rgba(0,212,255,0.1);
+padding: 2px 6px;
+border-radius: 4px;
+font-size: 0.9em;
+color: var(–accent);
+}
+
+/* ── Bottom controls ── */
+.bottom-bar {
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+padding: 16px 20px 28px;
+background: var(–bg);
+border-top: 1px solid rgba(255,255,255,0.05);
+position: sticky;
+bottom: 0;
+}
+.ctrl-btn {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.72rem;
+padding: 10px 20px;
+border-radius: 10px;
+border: none;
+cursor: pointer;
+transition: all 0.2s;
+letter-spacing: 0.03em;
+}
+.ctrl-prev, .ctrl-next { background: var(–surface); color: var(–text-muted); border: 1px solid var(–border); }
+.ctrl-prev:hover, .ctrl-next:hover { border-color: var(–accent); color: var(–accent); }
+.ctrl-flip { background: var(–accent2); color: #fff; font-weight: 700; font-size: 0.8rem; padding: 12px 28px; }
+.ctrl-flip:hover { background: #6d28d9; }
+
+/* ── Empty ── */
+.empty-state {
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 14px;
+padding: 60px 20px;
+text-align: center;
+width: 100%;
+}
+.empty-state.show { display: flex; }
+.empty-state p { font-family: ‘Space Mono’, monospace; font-size: 0.85rem; color: var(–text-muted); }
+.restart-btn {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.75rem;
+padding: 12px 24px;
+border-radius: 10px;
+background: var(–accent);
+color: #000;
+font-weight: 700;
+border: none;
+cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>IGCSE CHEMISTRY — NOV 2025</h1>
+  <p>swipe left / right to navigate · tap to flip</p>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-label" id="progressLabel">1 / 28</span>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCards('all',this)">All</button>
+  <button class="filter-btn" onclick="filterCards('q1',this)">Q1 · Ions</button>
+  <button class="filter-btn" onclick="filterCards('q2',this)">Q2 · Na</button>
+  <button class="filter-btn" onclick="filterCards('q3',this)">Q3 · Halogens</button>
+  <button class="filter-btn" onclick="filterCards('q4',this)">Q4 · Electrolysis</button>
+  <button class="filter-btn" onclick="filterCards('q5',this)">Q5 · Rates</button>
+  <button class="filter-btn" onclick="filterCards('q6',this)">Q6 · PVC</button>
+  <button class="filter-btn" onclick="filterCards('q7',this)">Q7 · Ethanol</button>
+  <button class="filter-btn" onclick="filterCards('q8',this)">Q8 · Air</button>
+  <button class="filter-btn" onclick="filterCards('q9',this)">Q9 · CuSO₄</button>
+  <button class="filter-btn" onclick="filterCards('q10',this)">Q10 · NH₃</button>
+</div>
+
+<div class="stage" id="stage">
+  <div class="ghost ghost-2"></div>
+  <div class="ghost ghost-1"></div>
+  <div class="empty-state" id="emptyState">
+    <p>🎉 All cards done!</p>
+    <button class="restart-btn" onclick="restartDeck()">Start Again</button>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <button class="ctrl-btn ctrl-prev" onclick="prevCard()">← Prev</button>
+  <button class="ctrl-btn ctrl-flip" onclick="flipCurrent()">Flip Card</button>
+  <button class="ctrl-btn ctrl-next" onclick="nextCard()">Next →</button>
+</div>
+
+<script>
+const ALL_CARDS = [
+  { id:1,  topic:'q1',  tag:'tag-q1',  label:'Q1a · Ions',
+    q:'What colour precipitate does sodium hydroxide solution produce with Fe²⁺ ions and with Fe³⁺ ions?',
+    a:'Fe²⁺ → <strong>green</strong> precipitate<br><br>Fe³⁺ → <strong>brown</strong> precipitate', marks:'2 marks' },
+
+  { id:2,  topic:'q1',  tag:'tag-q1',  label:'Q1b · Ions',
+    q:'Explain the result of testing the gas produced from ammonium ions with damp red litmus paper.',
+    a:'The damp red litmus paper <strong>turns blue</strong> because the gas is <strong>alkaline / basic</strong>. The gas is <strong>ammonia (NH₃)</strong>.', marks:'3 marks' },
+
+  { id:3,  topic:'q2',  tag:'tag-q2',  label:'Q2a(i) · Group 1',
+    q:'When sodium reacts with water, a gas is given off that produces a squeaky pop when ignited. Identify the gas.',
+    a:'<strong>Hydrogen / H₂</strong>', marks:'1 mark' },
+
+  { id:4,  topic:'q2',  tag:'tag-q2',  label:'Q2a(ii) · Group 1',
+    q:'Give one difference in the reaction with water if lithium is used instead of sodium.',
+    a:'Any one of:<br>• Reaction is <strong>less vigorous / slower</strong><br>• Less effervescence / less fizzing<br>• Lithium does <strong>not melt / form a ball</strong>', marks:'1 mark' },
+
+  { id:5,  topic:'q2',  tag:'tag-q2',  label:'Q2b(ii) · Group 1',
+    q:'Give a chemical equation for the reaction between sodium and oxygen.',
+    a:'<code>4Na + O₂ → 2Na₂O</code>', marks:'2 marks' },
+
+  { id:6,  topic:'q2',  tag:'tag-q2',  label:'Q2b(iii) · Group 1',
+    q:'Explain, in terms of structure and bonding, why sodium oxide has a high melting point.',
+    a:'• It has a <strong>giant ionic structure</strong><br>• There is <strong>electrostatic attraction between oppositely charged ions</strong> (Na⁺ and O²⁻)<br>• A <strong>large amount of energy is required to overcome</strong> these attractions / separate the ions', marks:'3 marks' },
+
+  { id:7,  topic:'q3',  tag:'tag-q3',  label:'Q3a · Halogens',
+    q:'Which halogen has a pale green colour at room temperature and pressure?\nA bromine  B chlorine  C fluorine  D iodine',
+    a:'<strong>B — Chlorine</strong>', marks:'1 mark' },
+
+  { id:8,  topic:'q3',  tag:'tag-q3',  label:'Q3b · Halogens',
+    q:'Which halogen will displace chlorine from potassium chloride solution?\nA astatine  B bromine  C fluorine  D iodine',
+    a:'<strong>C — Fluorine</strong><br><br>(More reactive than chlorine, so it can displace it)', marks:'1 mark' },
+
+  { id:9,  topic:'q3',  tag:'tag-q3',  label:'Q3c(i) · Halogens',
+    q:'Name the type of structure in solid iodine.',
+    a:'<strong>Simple molecular</strong>', marks:'1 mark' },
+
+  { id:10, topic:'q3',  tag:'tag-q3',  label:'Q3c(ii) · Halogens',
+    q:'Explain why bromine is a liquid but iodine is a solid at room temperature and pressure.',
+    a:'• Bromine has a <strong>smaller relative molecular mass</strong><br>• So bromine has <strong>weaker intermolecular forces</strong><br>• So bromine has a <strong>melting point below room temperature</strong> (and pressure)', marks:'3 marks' },
+
+  { id:11, topic:'q4',  tag:'tag-q4',  label:'Q4a · Electrolysis',
+    q:'Which row is correct for the electrolysis of an ionic compound?\nA: no/no  B: no/yes  C: yes/no  D: yes/yes\n(molten / solid)',
+    a:'<strong>C — Yes (molten) / No (solid)</strong><br><br>Ions are free to move when molten, but fixed in place in the solid state.', marks:'1 mark' },
+
+  { id:12, topic:'q4',  tag:'tag-q4',  label:'Q4b(ii) · Electrolysis',
+    q:'Describe the observations at each electrode during electrolysis of aqueous copper(II) sulfate using inert electrodes.',
+    a:'<strong>Negative electrode:</strong> pink-brown solid / metal deposited<br><br><strong>Positive electrode:</strong> bubbles of colourless gas', marks:'2 marks' },
+
+  { id:13, topic:'q4',  tag:'tag-q4',  label:'Q4b(iii) · Electrolysis',
+    q:'Give the ionic half-equation for the reduction reaction in the electrolysis of copper(II) sulfate solution.',
+    a:'<code>Cu²⁺ + 2e⁻ → Cu</code>', marks:'1 mark' },
+
+  { id:14, topic:'q5',  tag:'tag-q5',  label:'Q5a · Rates',
+    q:'From the graph, mass of CO₂ lost at 10 s = 1.4 g and at 30 s = 3.1 g.\nCalculate the mean rate of reaction between 10 s and 30 s.',
+    a:'Mass of CO₂ lost = 3.1 − 1.4 = <strong>1.7 g</strong><br><br>Mean rate = 1.7 ÷ 20 = <strong>0.085 g/s</strong>', marks:'2 marks' },
+
+  { id:15, topic:'q5',  tag:'tag-q5',  label:'Q5b(iii) · Rates',
+    q:'Explain how using larger marble chips affects the rate of the reaction with hydrochloric acid.',
+    a:'• <strong>Decrease in rate of reaction</strong> with larger chips<br>• Because there is a <strong>smaller surface area</strong><br>• So there are <strong>fewer / less frequent collisions</strong> between particles per unit time', marks:'3 marks' },
+
+  { id:16, topic:'q6',  tag:'tag-q6',  label:'Q6a · PVC',
+    q:'Which is the empirical formula of PVC?\nA CHCl  B C₂H₂Cl₂  C C₂H₃Cl  D C₄H₆Cl₂',
+    a:'<strong>C — C₂H₃Cl</strong>', marks:'1 mark' },
+
+  { id:17, topic:'q6',  tag:'tag-q6',  label:'Q6b(i) · PVC',
+    q:'A polymer is formed from many small molecules joining together. What is the name for this type of small molecule?',
+    a:'<strong>Monomer(s)</strong>', marks:'1 mark' },
+
+  { id:18, topic:'q6',  tag:'tag-q6',  label:'Q6c(i) · PVC',
+    q:'A sample of PVC produces 146 g of HCl gas. 1 mol of PVC produces 2400 mol of HCl.\nCalculate the mass of PVC burned.\n[Mr HCl = 36.5, Mr PVC = 150 000]',
+    a:'Amount HCl = 146 ÷ 36.5 = <strong>4 mol</strong><br>Amount PVC = 4 ÷ 2400 = <strong>0.00167 mol</strong><br>Mass PVC = 0.00167 × 150 000 = <strong>250 g</strong>', marks:'3 marks' },
+
+  { id:19, topic:'q6',  tag:'tag-q6',  label:'Q6c(ii) · PVC',
+    q:'Give one problem caused by the release of hydrogen chloride gas into the atmosphere.',
+    a:'Hydrogen chloride gas is <strong>toxic / acidic / corrosive</strong>', marks:'1 mark' },
+
+  { id:20, topic:'q6',  tag:'tag-q6',  label:'Q6c(iii) · PVC',
+    q:'PVC is an inert material. Explain why this is an advantage in underground water pipes.',
+    a:'• PVC <strong>will not react with water</strong><br>• So the pipe will <strong>not be damaged / will last a long time</strong> / PVC will <strong>not contaminate the water</strong>', marks:'2 marks' },
+
+  { id:21, topic:'q7',  tag:'tag-q7',  label:'Q7a · Ethanol',
+    q:'State the other reactant, pressure and catalyst used to manufacture ethanol from steam.',
+    a:'<strong>Other reactant:</strong> Ethene<br><strong>Pressure:</strong> 60–70 atm<br><strong>Catalyst:</strong> Phosphoric acid (H₃PO₄)', marks:'3 marks' },
+
+  { id:22, topic:'q7',  tag:'tag-q7',  label:'Q7b(i) · Fermentation',
+    q:'State the condition needed during fermentation to prevent the formation of ethanoic acid.',
+    a:'<strong>Anaerobic</strong> conditions / no O₂ / absence of air', marks:'1 mark' },
+
+  { id:23, topic:'q7',  tag:'tag-q7',  label:'Q7b(ii) · Fermentation',
+    q:'Explain why fermentation needs to happen in the range of 30°C to 40°C.',
+    a:'• <strong>Enzymes become inactive below 30°C</strong> (rate too slow)<br>• <strong>Yeast cells / enzymes denature above 40°C</strong>', marks:'2 marks' },
+
+  { id:24, topic:'q8',  tag:'tag-q8',  label:'Q8a(i) · Air',
+    q:'Name the most abundant gas in gas mixture X (the gases in dry air other than nitrogen and oxygen).',
+    a:'<strong>Argon (Ar)</strong>', marks:'1 mark' },
+
+  { id:25, topic:'q8',  tag:'tag-q8',  label:'Q8a(ii) · Air',
+    q:'Give one problem caused by an increasing amount of carbon dioxide in the Earth\'s atmosphere.',
+    a:'<strong>Global warming / climate change</strong>', marks:'1 mark' },
+
+  { id:26, topic:'q8',  tag:'tag-q8',  label:'Q8a(iii) · Air',
+    q:'What is the approximate volume of gas Z (oxygen) in 150 cm³ of dry air?\nA 80 cm³  B 100 cm³  C 120 cm³  D 140 cm³',
+    a:'<strong>C — 120 cm³</strong><br><br>(Oxygen ≈ 80% of 150 cm³ — oxygen is ~21% but in this question gas Z represents ~80% of the mixture shown)', marks:'1 mark' },
+
+  { id:27, topic:'q8',  tag:'tag-q8',  label:'Q8b · Air',
+    q:'Explain why the gas syringe reading is unchanged after sulfur powder is burned in dry air. Include a chemical equation.',
+    a:'• Sulfur <strong>combusts / reacts with oxygen</strong> in the air<br>• <code>S + O₂ → SO₂</code><br>• The volume of oxygen removed is <strong>replaced by the same volume of SO₂</strong>', marks:'3 marks' },
+
+  { id:28, topic:'q9',  tag:'tag-q9',  label:'Q9a(i) · CuSO₄',
+    q:'What is the observation when acidified barium chloride solution is added to copper(II) sulfate solution to test for sulfate ions?',
+    a:'<strong>White precipitate</strong>', marks:'1 mark' },
+
+  { id:29, topic:'q9',  tag:'tag-q9',  label:'Q9a(ii) · CuSO₄',
+    q:'Complete the equation for the reaction between copper(II) sulfate and barium chloride. Include state symbols.\nCuSO₄(aq) + BaCl₂(aq) → ? + ?',
+    a:'<code>CuSO₄(aq) + BaCl₂(aq) → CuCl₂(aq) + BaSO₄(s)</code>', marks:'2 marks' },
+
+  { id:30, topic:'q9',  tag:'tag-q9',  label:'Q9b · CuSO₄',
+    q:'Describe the method and result for the flame test to confirm copper(II) ions are present.',
+    a:'• Dip a <strong>metal / nichrome wire</strong> into hydrochloric acid then into the solid<br>• Place into a <strong>non-luminous / roaring Bunsen burner flame</strong><br>• Observe a <strong>blue-green flame</strong>', marks:'3 marks' },
+
+  { id:31, topic:'q9',  tag:'tag-q9',  label:'Q9c(i) · CuSO₄',
+    q:'Give a physical test that could be used to confirm the colourless liquid produced from heating hydrated copper(II) sulfate is water.',
+    a:'• Heat the liquid and confirm the <strong>boiling point is 100°C</strong><br><br>OR<br><br>• Cool the liquid and confirm the <strong>freezing / melting point is 0°C</strong>', marks:'2 marks' },
+
+  { id:32, topic:'q9',  tag:'tag-q9',  label:'Q9c(ii) · CuSO₄',
+    q:'Describe how the student could demonstrate that heating hydrated copper(II) sulfate is a reversible reaction.',
+    a:'• Add <strong>water to the anhydrous copper(II) sulfate</strong><br>• It turns <strong>back to blue</strong> (from white)', marks:'2 marks' },
+
+  { id:33, topic:'q9',  tag:'tag-q9',  label:'Q9d · CuSO₄',
+    q:'Show x = 5 in CuSO₄·xH₂O.\n[Empty tube: 20.50 g | +hydrated: 26.74 g | +anhydrous: 24.49 g]\n[Mr CuSO₄ = 159.5, Mr H₂O = 18]',
+    a:'Mass CuSO₄ = 24.49 − 20.50 = <strong>3.99 g</strong><br>Mass H₂O = 26.74 − 24.49 = <strong>2.25 g</strong><br>Moles CuSO₄ = 3.99 ÷ 159.5 = <strong>0.025 mol</strong><br>Moles H₂O = 2.25 ÷ 18 = <strong>0.125 mol</strong><br>x = 0.125 ÷ 0.025 = <strong>5 ✓</strong>', marks:'5 marks' },
+
+  { id:34, topic:'q10', tag:'tag-q10', label:'Q10a(i) · Ammonia',
+    q:'Complete the statements using <, = or >:\n— amount of product at equilibrium __ amount of reactants at equilibrium\n— rate of forward reaction at equilibrium __ rate of reverse reaction at equilibrium',
+    a:'• Amount of product __ amount of reactants: <strong>&gt;</strong><br>• Rate of forward reaction __ rate of reverse reaction: <strong>=</strong>', marks:'1 mark' },
+
+  { id:35, topic:'q10', tag:'tag-q10', label:'Q10a(ii) · Ammonia',
+    q:'The rate of reaction decreases when iron is removed from the sealed container. Explain why.',
+    a:'• The reaction is <strong>not being catalysed</strong><br>• So <strong>activation energy is no longer lowered</strong> (by an alternative pathway)<br>• So <strong>fewer molecules have energy ≥ the activation energy</strong> / more energy is required for reaction', marks:'3 marks' },
+
+  { id:36, topic:'q10', tag:'tag-q10', label:'Q10b · Ammonia',
+    q:'5100 g of N₂ used in N₂ + 3H₂ ⇌ 2NH₃. Percentage yield = 70%.\nCalculate the mass of ammonia produced.\n[Mr N₂ = 28, Mr NH₃ = 17]',
+    a:'Moles N₂ = 5100 ÷ 28 = <strong>182 mol</strong><br>Theoretical NH₃ = 182 × 2 = <strong>364 mol</strong><br>Actual NH₃ = 364 × 0.70 = <strong>255 mol</strong><br>Mass NH₃ = 255 × 17 = <strong>4335 g</strong>', marks:'4 marks' },
+
+  { id:37, topic:'q10', tag:'tag-q10', label:'Q10c · Ammonia',
+    q:'Pressure changes from 400 atm → 300 atm. Temperature changes from 400°C → 500°C.\nN₂ + 3H₂ ⇌ 2NH₃ (ΔH = −92 kJ/mol)\nDiscuss how these new conditions change the % yield of ammonia.',
+    a:'• Both changes cause a <strong>decrease in % yield</strong><br>• Equilibrium shifts <strong>backwards / to the left</strong><br>• <strong>Decreased pressure</strong> favours the side with <strong>more moles of gas</strong> (reactants: 4 mol vs products: 2 mol)<br>• <strong>Increased temperature</strong> favours the <strong>endothermic direction</strong> (reverse reaction)', marks:'6 marks' }
+];
+
+let deck = [...ALL_CARDS];
+let idx = 0;
+let flipped = false;
+let cardEl = null;
+
+function buildCard(data) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap';
+  // Convert \n to <br> in question text
+  const qHtml = data.q.replace(/\n/g, '<br>');
+  w.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="lbl lbl-right">KNOW IT ✓</div>
+        <div class="lbl lbl-left">SKIP ✗</div>
+        <span class="card-tag ${data.tag}">${data.label}</span>
+        <p class="q-text">${qHtml}</p>
+        <div class="flip-hint">tap to flip · swipe left/right to navigate</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="answer-label">Answer</div>
+        <div class="a-text">${data.a}</div>
+        <span class="marks">${data.marks}</span>
+      </div>
+    </div>`;
+  return w;
+}
+
+function showCard(i) {
+  const stage = document.getElementById('stage');
+  if (cardEl) { cardEl.remove(); cardEl = null; }
+  flipped = false;
+
+  if (!deck.length || i >= deck.length) {
+    document.getElementById('emptyState').classList.add('show');
+    updateProgress(deck.length, deck.length);
+    return;
+  }
+  document.getElementById('emptyState').classList.remove('show');
+  idx = Math.max(0, Math.min(i, deck.length - 1));
+  cardEl = buildCard(deck[idx]);
+  stage.appendChild(cardEl);
+  attachSwipe(cardEl);
+  updateProgress(idx + 1, deck.length);
+}
+
+function updateProgress(cur, total) {
+  const pct = total ? ((cur - 1) / total) * 100 : 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = total ? `${cur} / ${total}` : 'Done!';
+}
+
+function flipCurrent() {
+  if (!cardEl) return;
+  flipped = !flipped;
+  cardEl.classList.toggle('flipped', flipped);
+}
+
+function nextCard() { if (idx < deck.length - 1) showCard(idx + 1); }
+function prevCard() { if (idx > 0) showCard(idx - 1); }
+function restartDeck() { showCard(0); }
+
+function filterCards(topic, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  deck = topic === 'all' ? [...ALL_CARDS] : ALL_CARDS.filter(c => c.topic === topic);
+  showCard(0);
+}
+
+function attachSwipe(el) {
+  let sx = 0, sy = 0, cx = 0, cy = 0, dragging = false;
+  const SWIPE = 70, TAP_LIMIT = 10;
+
+  function start(x, y) { sx = x; sy = y; cx = x; cy = y; dragging = false; }
+
+  function move(x, y) {
+    cx = x; cy = y;
+    const dx = cx - sx;
+    if (!dragging && Math.abs(dx) > TAP_LIMIT) dragging = true;
+    if (!dragging) return;
+    const rot = dx * 0.06;
+    el.style.transform = `translateX(${dx}px) translateY(${-Math.abs(dx)*0.03}px) rotate(${rot}deg)`;
+    const lblR = el.querySelector('.lbl-right');
+    const lblL = el.querySelector('.lbl-left');
+    if (dx > 20)       { lblR.style.opacity = Math.min((dx-20)/60,1); lblL.style.opacity = 0; }
+    else if (dx < -20) { lblL.style.opacity = Math.min((-dx-20)/60,1); lblR.style.opacity = 0; }
+    else               { lblR.style.opacity = 0; lblL.style.opacity = 0; }
+  }
+
+  function end() {
+    const dx = cx - sx;
+    const lblR = el.querySelector('.lbl-right');
+    const lblL = el.querySelector('.lbl-left');
+    if (lblR) lblR.style.opacity = 0;
+    if (lblL) lblL.style.opacity = 0;
+
+    if (!dragging) { el.style.transform = ''; flipCurrent(); return; }
+
+    if (Math.abs(dx) >= SWIPE) {
+      const dir = dx > 0 ? 1 : -1;
+      el.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
+      el.style.transform = `translateX(${dir*130}%) rotate(${dir*20}deg)`;
+      el.style.opacity = '0';
+      setTimeout(() => dir > 0 ? nextCard() : prevCard(), 260);
+    } else {
+      el.style.transition = 'transform 0.38s cubic-bezier(0.34,1.56,0.64,1)';
+      el.style.transform = '';
+      setTimeout(() => el.style.transition = '', 400);
+    }
+    sx = 0; sy = 0;
+  }
+
+  el.addEventListener('touchstart', e => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  el.addEventListener('touchmove',  e => { move(e.touches[0].clientX, e.touches[0].clientY); if (dragging) e.preventDefault(); }, { passive: false });
+  el.addEventListener('touchend',   () => end());
+  el.addEventListener('mousedown',  e => { e.preventDefault(); start(e.clientX, e.clientY); });
+  window.addEventListener('mousemove', e => { if (sx || sy) move(e.clientX, e.clientY); });
+  window.addEventListener('mouseup',   () => { if (sx || sy) { end(); sx = 0; sy = 0; } });
+}
+
+document.addEventListener('keydown', e => {
+  if      (e.key === 'ArrowRight' || e.key === 'ArrowDown')  { e.preventDefault(); nextCard(); }
+  else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    { e.preventDefault(); prevCard(); }
+  else if (e.key === ' ' || e.key === 'Enter')                { e.preventDefault(); flipCurrent(); }
+});
+
+showCard(0);
+</script>
+
+</body>
+</html>
